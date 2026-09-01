@@ -18,7 +18,7 @@ export function SiteHeader() {
         <div className="flex items-center justify-between gap-4">
           <Link
             to="/"
-            className="shrink-0 font-display text-xl tracking-wordmark text-fg sm:text-2xl"
+            className="shrink-0 text-sm font-medium uppercase tracking-wordmark text-fg sm:text-base"
             aria-label={`${SITE.name}, home`}
           >
             {SITE.name}
@@ -30,7 +30,7 @@ export function SiteHeader() {
           aria-label="Primary"
           className="flex items-center justify-between sm:justify-end sm:gap-8"
         >
-          <ul className="flex items-center gap-5 sm:gap-7">
+          <ul className="flex items-center gap-5 sm:gap-8">
             {NAV.map((item) => {
               const active = pathname === item.to;
               return (
@@ -38,7 +38,7 @@ export function SiteHeader() {
                   <Link
                     to={item.to}
                     className={cn(
-                      "inline-flex min-h-11 items-center text-label uppercase tracking-label transition-opacity duration-200",
+                      "inline-flex min-h-11 items-center text-sm font-medium tracking-label transition-opacity duration-200",
                       active ? "text-fg" : "text-muted hover:text-fg",
                     )}
                     aria-current={active ? "page" : undefined}

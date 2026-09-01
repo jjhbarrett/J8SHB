@@ -41,8 +41,8 @@ function WorkPage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-12 sm:py-16">
-      <p className="text-label uppercase tracking-label text-muted">Work</p>
-      <h1 className="mt-4 font-display text-display text-fg">Stills</h1>
+      <p className="text-sm font-medium text-muted">Work</p>
+      <h1 className="mt-4 text-display text-fg">Stills</h1>
       <p className="mt-4 max-w-lg text-body text-muted">
         Physique, dance and studio. Click a frame.
       </p>

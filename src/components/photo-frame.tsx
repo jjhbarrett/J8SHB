@@ -32,7 +32,7 @@ export function PhotoFrame({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-md bg-surface",
+        "group relative overflow-hidden rounded-lg bg-surface",
         className,
       )}
     >
@@ -44,9 +44,9 @@ export function PhotoFrame({
           height={height}
           sizes={sizes}
           className={cn(
-            "h-full w-full object-cover outline outline-1 -outline-offset-1 outline-fg/10",
+            "h-full w-full object-cover",
             zoom &&
-              "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105",
+              "transition-transform duration-500 ease-out group-hover:scale-105",
             imgClassName,
           )}
           loading={priority ? "eager" : "lazy"}
@@ -57,9 +57,7 @@ export function PhotoFrame({
         />
       ) : (
         <div className="flex h-full min-h-40 w-full items-center justify-center">
-          <span className="font-sans text-label uppercase tracking-label text-muted">
-            {label}
-          </span>
+          <span className="text-sm text-muted">{label}</span>
         </div>
       )}
     </div>

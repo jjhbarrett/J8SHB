@@ -104,15 +104,13 @@ function BookPage() {
     const booked = studioById(done.studioId);
     return (
       <main className="mx-auto w-full max-w-2xl px-5 py-12 sm:py-20">
-        <p className="text-label uppercase tracking-label text-muted">
-          Request received
-        </p>
-        <h1 className="mt-4 font-display text-display text-fg">Thank you</h1>
-        <p className="mt-6 text-lead text-fg">
+        <p className="text-sm font-medium text-muted">Request received</p>
+        <h1 className="mt-4 text-display text-fg">Thank you</h1>
+        <p className="mt-6 text-lead font-light text-fg">
           We’ll check the room and confirm within 24 hours. A {formatPrice(SITE.hold)} hold
           secures the date.
         </p>
-        <dl className="mt-12 space-y-5 rounded-xl bg-surface px-6 py-8 text-body sm:px-8">
+        <dl className="mt-12 space-y-5 text-body">
           <Row label="Reference" value={done.reference} />
           <Row
             label="Studio"
@@ -139,8 +137,8 @@ function BookPage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-12 sm:py-16">
-      <p className="text-label uppercase tracking-label text-muted">Book a shoot</p>
-      <h1 className="mt-4 font-display text-display text-fg">Request a studio</h1>
+      <p className="text-sm font-medium text-muted">Book a shoot</p>
+      <h1 className="mt-4 text-display text-fg">Request a studio</h1>
       <p className="mt-4 max-w-xl text-body text-muted">
         Two hours. Josh checks his diary and the room. This is a request, not a
         payment.
@@ -162,13 +160,11 @@ function BookPage() {
         </section>
 
         {studio ? (
-          <section className="fade-in rounded-xl bg-surface p-6 sm:p-8">
+          <section className="fade-in">
             <Step n="02" title="When" />
             <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-12">
               <fieldset>
-                <legend className="text-label uppercase tracking-label text-muted">
-                  Day
-                </legend>
+                <legend className="text-sm text-muted">Day</legend>
                 <div className="mt-3 flex gap-3">
                   {(["weekday", "weekend"] as const).map((option) => (
                     <button
@@ -177,7 +173,7 @@ function BookPage() {
                       onClick={() => setDay(option)}
                       aria-pressed={day === option}
                       className={cn(
-                        "min-h-11 min-w-28 rounded-full px-4 text-label uppercase tracking-label transition-colors duration-200",
+                        "min-h-11 min-w-28 rounded-full px-4 text-sm font-medium capitalize transition-colors duration-200",
                         day === option
                           ? "bg-fg text-bg"
                           : "text-fg ring-1 ring-line hover:ring-fg/45",
@@ -189,9 +185,7 @@ function BookPage() {
                 </div>
               </fieldset>
               <label className="block min-w-56">
-                <span className="text-label uppercase tracking-label text-muted">
-                  Month
-                </span>
+                <span className="text-sm text-muted">Month</span>
                 <select
                   value={month}
                   onChange={(e) => setMonth(e.target.value)}
@@ -209,13 +203,11 @@ function BookPage() {
         ) : null}
 
         {studio && day ? (
-          <section className="fade-in rounded-xl bg-surface p-6 sm:p-8">
+          <section className="fade-in">
             <Step n="03" title="Who" />
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-6">
               <label className="block">
-                <span className="text-label uppercase tracking-label text-muted">
-                  Name
-                </span>
+                <span className="text-sm text-muted">Name</span>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -225,9 +217,7 @@ function BookPage() {
                 />
               </label>
               <label className="block">
-                <span className="text-label uppercase tracking-label text-muted">
-                  Instagram
-                </span>
+                <span className="text-sm text-muted">Instagram</span>
                 <input
                   value={instagram}
                   onChange={(e) => setInstagram(e.target.value)}
@@ -238,9 +228,7 @@ function BookPage() {
                 />
               </label>
               <label className="block">
-                <span className="text-label uppercase tracking-label text-muted">
-                  Shoot
-                </span>
+                <span className="text-sm text-muted">Shoot</span>
                 <input
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
@@ -278,8 +266,10 @@ function BookPage() {
 function Step({ n, title }: { n: string; title: string }) {
   return (
     <div className="flex items-baseline gap-4">
-      <span className="text-label uppercase tracking-label text-muted">{n}</span>
-      <h2 className="font-display text-3xl text-fg sm:text-4xl">{title}</h2>
+      <span className="text-sm text-muted">{n}</span>
+      <h2 className="text-3xl font-light tracking-display text-fg sm:text-4xl">
+        {title}
+      </h2>
     </div>
   );
 }
@@ -287,7 +277,7 @@ function Step({ n, title }: { n: string; title: string }) {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-8">
-      <dt className="text-label uppercase tracking-label text-muted">{label}</dt>
+      <dt className="text-sm text-muted">{label}</dt>
       <dd className="text-fg sm:text-right">{value}</dd>
     </div>
   );

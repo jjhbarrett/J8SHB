@@ -21,7 +21,7 @@ export function PortfolioGrid({
             src={still.src}
             alt={still.alt}
             label="PORTFOLIO"
-            className="aspect-still rounded-md"
+            className="aspect-still rounded-lg"
             width={800}
             height={1200}
             sizes="(min-width: 768px) 33vw, 50vw"

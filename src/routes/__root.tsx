@@ -6,7 +6,7 @@ import { SITE } from "@/lib/site";
 import appCss from "../styles.css?url";
 
 const FONT_HREF =
-  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&family=Manrope:wght@400;500;600&display=swap";
+  "https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -60,8 +60,8 @@ function Root() {
 function NotFound() {
   return (
     <main className="flex flex-1 flex-col items-start justify-center px-5 py-24">
-      <p className="text-label uppercase tracking-label text-muted">404</p>
-      <h1 className="mt-4 font-display text-display text-fg">Page not found</h1>
+      <p className="text-sm font-medium text-muted">404</p>
+      <h1 className="mt-4 text-display text-fg">Page not found</h1>
       <p className="mt-4 max-w-md text-body text-muted">
         That page isn’t on the site. Work, Book and Contact are in the header.
       </p>

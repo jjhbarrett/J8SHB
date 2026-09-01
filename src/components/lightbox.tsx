@@ -73,13 +73,13 @@ export function Lightbox({ stills, activeId, onClose, onChange }: LightboxProps)
         />
       </div>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-5">
-        <p className="text-label uppercase tracking-label text-muted">
+        <p className="text-sm text-muted">
           {String(index + 1).padStart(2, "0")} / {String(stills.length).padStart(2, "0")}
         </p>
         <button
           type="button"
           onClick={onClose}
-          className="pointer-events-auto min-h-11 rounded-full px-4 text-label uppercase tracking-label text-fg ring-1 ring-line"
+          className="pointer-events-auto min-h-11 rounded-full px-4 text-sm font-medium text-fg ring-1 ring-line"
         >
           Close
         </button>
@@ -88,7 +88,7 @@ export function Lightbox({ stills, activeId, onClose, onChange }: LightboxProps)
         <button
           type="button"
           onClick={() => onChange(prev.id)}
-          className="absolute left-2 top-1/2 z-20 min-h-11 min-w-11 -translate-y-1/2 rounded-full text-label uppercase tracking-label text-fg ring-1 ring-line sm:left-5"
+          className="absolute left-2 top-1/2 z-20 min-h-11 min-w-11 -translate-y-1/2 rounded-full text-sm font-medium text-fg ring-1 ring-line sm:left-5"
           aria-label="Previous"
         >
           Prev
@@ -98,7 +98,7 @@ export function Lightbox({ stills, activeId, onClose, onChange }: LightboxProps)
         <button
           type="button"
           onClick={() => onChange(next.id)}
-          className="absolute right-2 top-1/2 z-20 min-h-11 min-w-11 -translate-y-1/2 rounded-full text-label uppercase tracking-label text-fg ring-1 ring-line sm:right-5"
+          className="absolute right-2 top-1/2 z-20 min-h-11 min-w-11 -translate-y-1/2 rounded-full text-sm font-medium text-fg ring-1 ring-line sm:right-5"
           aria-label="Next"
         >
           Next

@@ -9,27 +9,27 @@
   --color-paper: #f4f1ea;
   --color-ink: #0c0b0a;
 
-  --font-display: "Cormorant Garamond", "Times New Roman", Times, serif;
-  --font-sans: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Poppins", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: "Poppins", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  --text-label: 0.6875rem;
-  --text-body: 0.9375rem;
-  --text-lead: 1.125rem;
-  --text-display: clamp(2.75rem, 9vw, 6.5rem);
+  --text-label: 0.8125rem;
+  --text-body: 1rem;
+  --text-lead: 1.25rem;
+  --text-display: clamp(2.5rem, 8vw, 5.5rem);
 
-  --tracking-label: 0.14em;
-  --tracking-wordmark: 0.14em;
-  --tracking-display: -0.02em;
+  --tracking-label: 0.02em;
+  --tracking-wordmark: 0.16em;
+  --tracking-display: -0.04em;
 
   --aspect-studio: 4 / 3;
   --aspect-still: 2 / 3;
 
-  --radius-xs: 8px;
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
-  --radius-xl: 28px;
-  --radius: 16px;
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --radius: 20px;
 
   --shadow-card: 0 0 0 1px rgba(244, 241, 234, 0.08);
   --shadow-card-hover: 0 0 0 1px rgba(244, 241, 234, 0.16);
@@ -50,6 +50,7 @@
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: var(--text-body);
+    font-weight: 400;
     line-height: 1.55;
   }
 
@@ -58,9 +59,9 @@
   h3 {
     text-wrap: balance;
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 300;
     letter-spacing: var(--tracking-display);
-    line-height: 1.05;
+    line-height: 1.1;
   }
 
   p {

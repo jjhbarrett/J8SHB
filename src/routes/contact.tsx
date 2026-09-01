@@ -58,8 +58,8 @@ function ContactPage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-12 sm:py-16">
-      <p className="text-label uppercase tracking-label text-muted">Contact</p>
-      <h1 className="mt-4 font-display text-display text-fg">Write</h1>
+      <p className="text-sm font-medium text-muted">Contact</p>
+      <h1 className="mt-4 text-display text-fg">Write</h1>
       <p className="mt-4 max-w-lg text-body text-muted">
         For a shoot, use Book. For anything else, write here — or just DM.
       </p>
@@ -70,18 +70,13 @@ function ContactPage() {
       </div>
 
       {sent ? (
-        <p className="mt-16 max-w-md font-display text-2xl text-fg fade-in">
+        <p className="mt-16 max-w-md text-2xl font-light tracking-display text-fg fade-in">
           Received. We’ll reply within 24 hours.
         </p>
       ) : (
-        <form
-          onSubmit={onSubmit}
-          className="mt-12 max-w-md space-y-6 rounded-xl bg-surface p-6 sm:p-8"
-        >
+        <form onSubmit={onSubmit} className="mt-12 max-w-md space-y-6">
           <label className="block">
-            <span className="text-label uppercase tracking-label text-muted">
-              Name
-            </span>
+            <span className="text-sm text-muted">Name</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -91,9 +86,7 @@ function ContactPage() {
             />
           </label>
           <label className="block">
-            <span className="text-label uppercase tracking-label text-muted">
-              Email
-            </span>
+            <span className="text-sm text-muted">Email</span>
             <input
               type="email"
               value={email}
@@ -103,9 +96,7 @@ function ContactPage() {
             />
           </label>
           <label className="block">
-            <span className="text-label uppercase tracking-label text-muted">
-              Instagram
-            </span>
+            <span className="text-sm text-muted">Instagram</span>
             <input
               value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
@@ -115,9 +106,7 @@ function ContactPage() {
             />
           </label>
           <label className="block">
-            <span className="text-label uppercase tracking-label text-muted">
-              Message
-            </span>
+            <span className="text-sm text-muted">Message</span>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
