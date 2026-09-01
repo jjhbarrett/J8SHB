@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { submitContact } from "@/lib/request";
 import { SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -10,9 +11,6 @@ export const Route = createFileRoute("/contact")({
     meta: [{ title: "Contact — J8 STUDIOS" }],
   }),
 });
-
-const fieldClass =
-  "mt-2 w-full border-0 border-b border-line bg-transparent px-0 py-3 text-body text-fg outline-none transition-[border-color] duration-200 placeholder:text-muted focus:border-fg";
 
 function ContactPage() {
   const [name, setName] = useState("");
@@ -67,9 +65,7 @@ function ContactPage() {
       </p>
 
       <div className="mt-10 flex flex-col gap-3 text-body text-fg">
-        <p>
-          {SITE.email}
-        </p>
+        <p>{SITE.email}</p>
         <p>@{SITE.instagramHandle}</p>
       </div>
 
@@ -78,7 +74,10 @@ function ContactPage() {
           Received. We’ll reply within 24 hours.
         </p>
       ) : (
-        <form onSubmit={onSubmit} className="mt-16 max-w-md space-y-8">
+        <form
+          onSubmit={onSubmit}
+          className="mt-12 max-w-md space-y-6 rounded-xl bg-surface p-6 sm:p-8"
+        >
           <label className="block">
             <span className="text-label uppercase tracking-label text-muted">
               Name
@@ -127,11 +126,7 @@ function ContactPage() {
             />
           </label>
           {error ? <p className="text-body text-muted">{error}</p> : null}
-          <button
-            type="submit"
-            disabled={pending}
-            className="min-h-11 border border-fg px-6 text-label uppercase tracking-label text-fg disabled:opacity-50"
-          >
+          <button type="submit" disabled={pending} className={btnPrimary}>
             {pending ? "Sending" : "Send"}
           </button>
         </form>

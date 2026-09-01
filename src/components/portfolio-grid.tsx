@@ -14,14 +14,14 @@ export function PortfolioGrid({
   linkToWork = false,
 }: PortfolioGridProps) {
   return (
-    <ul className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4">
+    <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5">
       {stills.map((still, index) => {
         const frame = (
           <PhotoFrame
             src={still.src}
             alt={still.alt}
             label="PORTFOLIO"
-            className="aspect-still"
+            className="aspect-still rounded-md"
             width={800}
             height={1200}
             sizes="(min-width: 768px) 33vw, 50vw"
@@ -32,11 +32,7 @@ export function PortfolioGrid({
         if (linkToWork) {
           return (
             <li key={still.id}>
-              <Link
-                to="/work"
-                search={{ i: still.id }}
-                className="block opacity-100 hover:opacity-80"
-              >
+              <Link to="/work" search={{ i: still.id }} className="block">
                 {frame}
               </Link>
             </li>
@@ -48,7 +44,7 @@ export function PortfolioGrid({
             <button
               type="button"
               onClick={() => onOpen?.(still.id)}
-              className="block w-full opacity-100 hover:opacity-80"
+              className="block w-full"
               aria-label={`Open ${still.alt}`}
             >
               {frame}

@@ -9,22 +9,25 @@ export const Route = createFileRoute("/")({ component: Home });
 function Home() {
   return (
     <main>
-      <section className="relative min-h-[80svh]">
-        <PhotoFrame
-          src="/images/hero.jpg"
-          alt="Editorial physique photograph, studio"
-          label="PORTFOLIO"
-          className="absolute inset-0 h-full w-full"
-          imgClassName="h-full w-full object-cover"
-          width={1600}
-          height={900}
-          sizes="100vw"
-          priority
-        />
-        <div className="absolute inset-x-0 bottom-0 bg-bg/55">
-          <p className="mx-auto max-w-7xl px-5 py-6 font-display text-lead text-fg sm:py-8 sm:text-2xl">
-            {SITE.positioning}
-          </p>
+      <section className="px-5 pt-2 sm:px-6 sm:pt-3">
+        <div className="relative mx-auto min-h-[78svh] max-w-7xl overflow-hidden rounded-xl">
+          <PhotoFrame
+            src="/images/hero.jpg"
+            alt="Editorial physique photograph, studio"
+            label="PORTFOLIO"
+            className="absolute inset-0 h-full w-full rounded-xl"
+            imgClassName="h-full w-full object-cover"
+            width={1600}
+            height={900}
+            sizes="100vw"
+            priority
+            zoom={false}
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-bg/80 to-transparent">
+            <p className="mx-auto max-w-7xl px-6 py-8 font-display text-lead text-fg sm:px-10 sm:py-10 sm:text-2xl">
+              {SITE.positioning}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -33,7 +36,7 @@ function Home() {
           <h2 className="text-label uppercase tracking-label text-muted">Work</h2>
           <Link
             to="/work"
-            className="text-label uppercase tracking-label text-fg hover:opacity-70"
+            className="text-label uppercase tracking-label text-fg transition-opacity duration-200 hover:opacity-70"
           >
             All stills
           </Link>

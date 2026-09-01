@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { StudioCards } from "@/components/studio-cards";
+import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { submitShootRequest } from "@/lib/request";
 import {
   formatMonth,
@@ -27,9 +28,6 @@ export const Route = createFileRoute("/book")({
     meta: [{ title: "Book a shoot — J8 STUDIOS" }],
   }),
 });
-
-const fieldClass =
-  "mt-2 w-full border-0 border-b border-line bg-transparent px-0 py-3 text-body text-fg outline-none transition-[border-color] duration-200 placeholder:text-muted focus:border-fg";
 
 function BookPage() {
   const { studio: studioParam } = Route.useSearch();
@@ -114,7 +112,7 @@ function BookPage() {
           We’ll check the room and confirm within 24 hours. A {formatPrice(SITE.hold)} hold
           secures the date.
         </p>
-        <dl className="mt-12 space-y-5 border-t border-line pt-8 text-body">
+        <dl className="mt-12 space-y-5 rounded-xl bg-surface px-6 py-8 text-body sm:px-8">
           <Row label="Reference" value={done.reference} />
           <Row
             label="Studio"
@@ -148,7 +146,7 @@ function BookPage() {
         payment.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-16 space-y-20">
+      <form onSubmit={onSubmit} className="mt-16 space-y-16">
         <section>
           <Step n="01" title="Choose the studio" />
           <div className="mt-8">
@@ -164,7 +162,7 @@ function BookPage() {
         </section>
 
         {studio ? (
-          <section className="fade-in">
+          <section className="fade-in rounded-xl bg-surface p-6 sm:p-8">
             <Step n="02" title="When" />
             <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-12">
               <fieldset>
@@ -179,10 +177,10 @@ function BookPage() {
                       onClick={() => setDay(option)}
                       aria-pressed={day === option}
                       className={cn(
-                        "min-h-11 min-w-28 border px-4 text-label uppercase tracking-label transition-colors duration-200",
+                        "min-h-11 min-w-28 rounded-full px-4 text-label uppercase tracking-label transition-colors duration-200",
                         day === option
-                          ? "border-fg bg-fg text-bg"
-                          : "border-line text-fg hover:border-fg",
+                          ? "bg-fg text-bg"
+                          : "text-fg ring-1 ring-line hover:ring-fg/45",
                       )}
                     >
                       {option}
@@ -211,9 +209,9 @@ function BookPage() {
         ) : null}
 
         {studio && day ? (
-          <section className="fade-in">
+          <section className="fade-in rounded-xl bg-surface p-6 sm:p-8">
             <Step n="03" title="Who" />
-            <div className="mt-8 grid max-w-xl grid-cols-1 gap-8">
+            <div className="mt-8 grid max-w-xl grid-cols-1 gap-6">
               <label className="block">
                 <span className="text-label uppercase tracking-label text-muted">
                   Name
@@ -256,7 +254,7 @@ function BookPage() {
         ) : null}
 
         {studio && day ? (
-          <section className="fade-in pb-12">
+          <section className="fade-in pb-8">
             <Step n="04" title="Request" />
             <p className="mt-6 max-w-xl text-body text-muted">
               {studio.name}, {studio.city}. {day === "weekend" ? "Weekend" : "Weekday"}{" "}
@@ -266,7 +264,7 @@ function BookPage() {
             <button
               type="submit"
               disabled={!canRequest || pending}
-              className="mt-8 min-h-12 border border-fg px-8 text-label uppercase tracking-label text-fg disabled:opacity-40"
+              className={cn(btnPrimary, "mt-8 min-h-12 px-8")}
             >
               {pending ? "Sending" : "Request this studio"}
             </button>

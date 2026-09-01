@@ -6,7 +6,7 @@ import { SITE } from "@/lib/site";
 import appCss from "../styles.css?url";
 
 const FONT_HREF =
-  "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&display=swap";
+  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&family=Manrope:wght@400;500;600&display=swap";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,7 +18,7 @@ export const Route = createRootRoute({
         name: "description",
         content: SITE.positioning,
       },
-      { name: "theme-color", content: "#0a0a0a" },
+      { name: "theme-color", content: "#0c0b0a" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },

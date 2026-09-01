@@ -17,7 +17,7 @@ export function StudioCards({
   linkToBook = false,
 }: StudioCardsProps) {
   return (
-    <ul className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-6">
+    <ul className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-5">
       {studios.map((studio) => {
         const selected = selectedId === studio.id;
         const body = (
@@ -26,24 +26,28 @@ export function StudioCards({
               src={studio.image}
               alt={`${studio.name}, ${studio.city}`}
               label="STUDIO"
-              className="aspect-studio"
+              className="aspect-studio rounded-md"
               width={1000}
               height={750}
               sizes="(min-width: 768px) 33vw, 100vw"
             />
-            <div className="mt-4 flex items-baseline justify-between gap-4">
-              <p className="text-label uppercase tracking-label text-muted">
-                {studio.city}
-              </p>
-              <p className="font-display text-2xl text-fg">
-                {formatPrice(studio.price)}
+            <div className="px-3 pb-3 pt-4">
+              <div className="flex items-baseline justify-between gap-4">
+                <p className="text-label uppercase tracking-label text-muted">
+                  {studio.city}
+                </p>
+                <p className="font-display text-2xl text-fg">
+                  {formatPrice(studio.price)}
+                </p>
+              </div>
+              <h3 className="mt-2 font-display text-2xl text-fg">
+                {studio.name}
+              </h3>
+              <p className="mt-2 text-body text-muted">{studio.vibe}</p>
+              <p className="mt-3 text-label uppercase tracking-label text-muted">
+                {studio.hours}
               </p>
             </div>
-            <h3 className="mt-2 font-display text-2xl text-fg">{studio.name}</h3>
-            <p className="mt-2 text-body text-muted">{studio.vibe}</p>
-            <p className="mt-3 text-label uppercase tracking-label text-muted">
-              {studio.hours}
-            </p>
           </>
         );
 
@@ -53,7 +57,7 @@ export function StudioCards({
               <Link
                 to="/book"
                 search={{ studio: studio.id }}
-                className="block opacity-100 hover:opacity-80"
+                className="block rounded-xl bg-surface p-3 shadow-card transition-[box-shadow] duration-200 hover:shadow-card-hover"
               >
                 {body}
               </Link>
@@ -68,18 +72,11 @@ export function StudioCards({
               onClick={() => onSelect?.(studio.id)}
               aria-pressed={selected}
               className={cn(
-                "w-full text-left",
-                selected ? "opacity-100" : "opacity-80 hover:opacity-100",
+                "w-full rounded-xl bg-surface p-3 text-left shadow-card transition-[box-shadow] duration-200 hover:shadow-card-hover",
+                selected && "shadow-card-hover ring-1 ring-fg",
               )}
             >
-              <div
-                className={cn(
-                  "outline outline-offset-4 outline-transparent",
-                  selected && "outline-fg",
-                )}
-              >
-                {body}
-              </div>
+              {body}
             </button>
           </li>
         );
