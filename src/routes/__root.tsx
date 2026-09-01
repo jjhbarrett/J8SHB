@@ -5,6 +5,9 @@ import { SiteShell } from "@/components/site-shell";
 import { SITE } from "@/lib/site";
 import appCss from "../styles.css?url";
 
+const FONT_HREF =
+  "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&display=swap";
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -19,6 +22,13 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      { rel: "stylesheet", href: FONT_HREF },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },

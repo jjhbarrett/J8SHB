@@ -15,13 +15,17 @@ export function PortfolioGrid({
 }: PortfolioGridProps) {
   return (
     <ul className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4">
-      {stills.map((still) => {
+      {stills.map((still, index) => {
         const frame = (
           <PhotoFrame
             src={still.src}
             alt={still.alt}
             label="PORTFOLIO"
             className="aspect-still"
+            width={800}
+            height={1200}
+            sizes="(min-width: 768px) 33vw, 50vw"
+            priority={index < 2}
           />
         );
 
@@ -31,7 +35,7 @@ export function PortfolioGrid({
               <Link
                 to="/work"
                 search={{ i: still.id }}
-                className="block transition-opacity duration-200 hover:opacity-80"
+                className="block opacity-100 hover:opacity-80"
               >
                 {frame}
               </Link>
@@ -44,7 +48,7 @@ export function PortfolioGrid({
             <button
               type="button"
               onClick={() => onOpen?.(still.id)}
-              className="block w-full transition-opacity duration-200 hover:opacity-80"
+              className="block w-full opacity-100 hover:opacity-80"
               aria-label={`Open ${still.alt}`}
             >
               {frame}

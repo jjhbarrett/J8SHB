@@ -8,6 +8,9 @@ type PhotoFrameProps = {
   className?: string;
   imgClassName?: string;
   priority?: boolean;
+  width?: number;
+  height?: number;
+  sizes?: string;
 };
 
 export function PhotoFrame({
@@ -17,6 +20,9 @@ export function PhotoFrame({
   className,
   imgClassName,
   priority = false,
+  width,
+  height,
+  sizes,
 }: PhotoFrameProps) {
   const [failed, setFailed] = useState(false);
   const showImage = Boolean(src) && !failed;
@@ -27,9 +33,14 @@ export function PhotoFrame({
         <img
           src={src}
           alt={alt}
+          width={width}
+          height={height}
+          sizes={sizes}
           className={cn("h-full w-full object-cover", imgClassName)}
           loading={priority ? "eager" : "lazy"}
-          fetchPriority={priority ? "high" : "auto"}
+          fetchPriority={priority ? "high" : "low"}
+          decoding="async"
+          draggable={false}
           onError={() => setFailed(true)}
         />
       ) : (

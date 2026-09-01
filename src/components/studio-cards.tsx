@@ -27,6 +27,9 @@ export function StudioCards({
               alt={`${studio.name}, ${studio.city}`}
               label="STUDIO"
               className="aspect-studio"
+              width={1000}
+              height={750}
+              sizes="(min-width: 768px) 33vw, 100vw"
             />
             <div className="mt-4 flex items-baseline justify-between gap-4">
               <p className="text-label uppercase tracking-label text-muted">
@@ -50,7 +53,7 @@ export function StudioCards({
               <Link
                 to="/book"
                 search={{ studio: studio.id }}
-                className="block transition-opacity duration-200 hover:opacity-80"
+                className="block opacity-100 hover:opacity-80"
               >
                 {body}
               </Link>
@@ -65,13 +68,13 @@ export function StudioCards({
               onClick={() => onSelect?.(studio.id)}
               aria-pressed={selected}
               className={cn(
-                "w-full text-left transition-opacity duration-200",
+                "w-full text-left",
                 selected ? "opacity-100" : "opacity-80 hover:opacity-100",
               )}
             >
               <div
                 className={cn(
-                  "outline outline-offset-4 outline-transparent transition-[outline-color] duration-200",
+                  "outline outline-offset-4 outline-transparent",
                   selected && "outline-fg",
                 )}
               >

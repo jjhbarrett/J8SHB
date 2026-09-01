@@ -65,6 +65,9 @@ export function Lightbox({ stills, activeId, onClose, onChange }: LightboxProps)
           label="PORTFOLIO"
           className="max-h-full max-w-full"
           imgClassName="max-h-[88svh] w-auto object-contain"
+          width={800}
+          height={1200}
+          sizes="90vw"
           priority
         />
       </div>

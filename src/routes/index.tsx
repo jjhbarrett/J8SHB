@@ -16,6 +16,9 @@ function Home() {
           label="PORTFOLIO"
           className="absolute inset-0 h-full w-full"
           imgClassName="h-full w-full object-cover"
+          width={1600}
+          height={900}
+          sizes="100vw"
           priority
         />
         <div className="absolute inset-x-0 bottom-0 bg-bg/55">
@@ -30,7 +33,7 @@ function Home() {
           <h2 className="text-label uppercase tracking-label text-muted">Work</h2>
           <Link
             to="/work"
-            className="text-label uppercase tracking-label text-fg transition-opacity duration-200 hover:opacity-70"
+            className="text-label uppercase tracking-label text-fg hover:opacity-70"
           >
             All stills
           </Link>
