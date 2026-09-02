@@ -69,8 +69,6 @@ export const PACKAGES: ShootPackage[] = [
     id: "group",
     name: "Group Shoot",
     price: null,
-    each: 140,
-    minPeople: 3,
     hours: "From 3 hours",
     includes: [
       "Min. 3 people",
@@ -158,7 +156,7 @@ export function packagePriceLabel(item: ShootPackage): string {
       ? `${formatPrice(item.each)} each · min. ${item.minPeople}`
       : `${formatPrice(item.each)} each`;
   }
-  if (item.price == null) return "Custom";
+  if (item.price == null) return "Contact for quote";
   return formatPrice(item.price);
 }
 
