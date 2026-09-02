@@ -88,6 +88,7 @@ export const submitShootRequest = createServerFn({ method: "POST" })
       body: asText(fields),
     });
     await sendEnquiryMail({
+      id: reference,
       subject: `J8 STUDIOS — ${subject}`,
       fields,
     });
@@ -110,8 +111,9 @@ export const submitContact = createServerFn({ method: "POST" })
     const subject = `Message from ${data.name}`;
     const { recordEnquiry } = await import("@/lib/enquiries");
     const { sendEnquiryMail } = await import("@/lib/notify.server");
+    const id = `C-${makeReference().slice(3)}`;
     await recordEnquiry({
-      id: `C-${makeReference().slice(3)}`,
+      id,
       kind: "contact",
       name: data.name,
       email: data.email,
@@ -120,6 +122,7 @@ export const submitContact = createServerFn({ method: "POST" })
       body: asText(fields),
     });
     await sendEnquiryMail({
+      id,
       subject: `J8 STUDIOS — ${subject}`,
       replyTo: data.email?.includes("@") ? data.email : undefined,
       fields,

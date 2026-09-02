@@ -1,6 +1,7 @@
 import { SITE } from "@/lib/site";
 
 export type EnquiryMail = {
+  id: string;
   subject: string;
   replyTo?: string;
   fields: Record<string, string>;
@@ -164,19 +165,34 @@ function sleep(ms: number): Promise<void> {
 export async function sendEnquiryMail(mail: EnquiryMail): Promise<void> {
   const to = inboxAddress();
   const text = asText(mail.fields);
+  let filed = false;
+  try {
+    const { fileEnquiry } = await import("@/lib/inbox-github.server");
+    filed = await fileEnquiry({
+      id: mail.id,
+      title: mail.subject,
+      body: text,
+    });
+  } catch {
+    filed = false;
+  }
   const attempts = [
     () => sendResend(mail, to, text),
     () => sendWebhook(mail, to, text),
     () => sendFormSubmit(mail, to, text),
-    () => sendFormSubmit(mail, "j8shb@icloud.com", text),
   ];
+  let emailed = false;
   for (const attempt of attempts) {
     try {
-      if (await attempt()) return;
+      if (await attempt()) {
+        emailed = true;
+        break;
+      }
     } catch {
       /* try the next path */
     }
   }
+  if (filed || emailed) return;
   if (process.env.VERCEL || process.env.RESEND_API_KEY || process.env.REQUEST_WEBHOOK_URL) {
     throw new Error("Could not send the request. Try again.");
   }
