@@ -10,9 +10,9 @@ export const SITE = {
 } as const;
 
 export const PACKAGE_IDS = [
-  "studio-days",
   "signature",
   "duo",
+  "studio-days",
   "group",
 ] as const;
 export type PackageId = (typeof PACKAGE_IDS)[number];
@@ -30,19 +30,6 @@ export type ShootPackage = {
 };
 
 export const PACKAGES: ShootPackage[] = [
-  {
-    id: "studio-days",
-    name: "Studio Days",
-    blurb:
-      "A private 1.5 hour slot on a day Josh is already in the studio.",
-    price: 199,
-    hours: "1.5 hours",
-    exclusiveDates: true,
-    includes: [
-      "10 edited images, chosen by you",
-      "Studio cost included",
-    ],
-  },
   {
     id: "signature",
     name: "1–1 Private",
@@ -62,6 +49,19 @@ export const PACKAGES: ShootPackage[] = [
     hours: "2.5 hours",
     includes: [
       "15 edited images each, chosen by you",
+      "Studio cost included",
+    ],
+  },
+  {
+    id: "studio-days",
+    name: "Studio Days",
+    blurb:
+      "A private 1.5 hour slot on a day Josh is already in the studio.",
+    price: 200,
+    hours: "1.5 hours",
+    exclusiveDates: true,
+    includes: [
+      "10 edited images, chosen by you",
       "Studio cost included",
     ],
   },

@@ -38,9 +38,9 @@ export type MediaSlot = {
 
 export const MEDIA_SLOTS: MediaSlot[] = [
   { key: "hero", label: "Home hero", group: "Home", maxWidth: 1600 },
-  { key: "package-studio-days", label: "Studio Days", group: "Shoots", maxWidth: 1400 },
   { key: "package-signature", label: "1–1 Private", group: "Shoots", maxWidth: 1400 },
   { key: "package-duo", label: "Duo Shoot", group: "Shoots", maxWidth: 1400 },
+  { key: "package-studio-days", label: "Studio Days", group: "Shoots", maxWidth: 1400 },
   { key: "package-group", label: "Group Shoot", group: "Shoots", maxWidth: 1400 },
   { key: "studio-northampton", label: "Northampton", group: "Studios", maxWidth: 1000 },
   { key: "studio-london", label: "London", group: "Studios", maxWidth: 1000 },
