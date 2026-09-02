@@ -25,7 +25,10 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
   head: () => ({
-    meta: [{ title: "Media — J8 STUDIOS" }],
+    meta: [
+      { title: "Media — J8 STUDIOS" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
 });
 

@@ -17,7 +17,10 @@ export const Route = createFileRoute("/login")({
     error: typeof search.error === "string" ? search.error : undefined,
   }),
   head: () => ({
-    meta: [{ title: "Admin — J8 STUDIOS" }],
+    meta: [
+      { title: "Sign in — J8 STUDIOS" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
 });
 
@@ -36,16 +39,14 @@ function Login() {
   const [oauthOk, setOauthOk] = useState(false);
   const [pending, setPending] = useState<"email" | string | null>(null);
   const [error, setError] = useState<string | null>(
-    oauthError
-      ? "X did not finish. Use email to open admin."
-      : null,
+    oauthError ? "X did not finish. Use email." : null,
   );
 
   useEffect(() => {
     setOauthOk(grokOAuthButtonsOnHost(window.location.hostname));
     void adminExists()
       .then(setHasAdmin)
-      .catch(() => setHasAdmin(false));
+      .catch(() => setHasAdmin(true));
   }, []);
 
   async function onEmail(event: FormEvent) {
@@ -67,7 +68,7 @@ function Login() {
           name: "Josh",
           callbackURL: "/admin",
         });
-        if (fail) throw new Error(fail.message ?? "Could not create the admin.");
+        if (fail) throw new Error(fail.message ?? "Could not sign in.");
       }
       await navigate({ to: "/admin" });
     } catch (err) {
@@ -99,13 +100,8 @@ function Login() {
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-5 py-16">
-      <p className="text-sm font-medium text-muted">Admin</p>
-      <h1 className="mt-4 text-display text-fg">Sign in</h1>
-      <p className="mt-4 text-body text-muted">
-        {hasAdmin
-          ? "Sign in to replace stills."
-          : "Create the admin login. Compression happens when you pick a file."}
-      </p>
+      <h1 className="text-display text-fg">Sign in</h1>
+      <p className="mt-4 text-body text-muted">Email and password.</p>
 
       {showOauth ? (
         <div className="mt-10 space-y-3">
@@ -148,7 +144,7 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={fieldClass}
-            autoComplete={hasAdmin ? "current-password" : "new-password"}
+            autoComplete="current-password"
             minLength={8}
             required
           />
@@ -159,11 +155,7 @@ function Login() {
           disabled={pending !== null || hasAdmin === null}
           className={cn(showOauth ? btnQuiet : btnPrimary, "w-full")}
         >
-          {pending === "email"
-            ? "Signing in"
-            : hasAdmin
-              ? "Sign in with email"
-              : "Create admin"}
+          {pending === "email" ? "Signing in" : "Sign in"}
         </button>
       </form>
     </main>
