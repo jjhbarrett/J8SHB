@@ -20,6 +20,12 @@ export const Route = createFileRoute("/login")({
   }),
 });
 
+const PROVIDERS = [...GROK_PROVIDERS].sort((a, b) => {
+  if (a.label === "X") return -1;
+  if (b.label === "X") return 1;
+  return 0;
+});
+
 function Login() {
   const { error: oauthError } = Route.useSearch();
   const navigate = useNavigate();
@@ -28,7 +34,9 @@ function Login() {
   const [hasAdmin, setHasAdmin] = useState<boolean | null>(null);
   const [pending, setPending] = useState<"email" | string | null>(null);
   const [error, setError] = useState<string | null>(
-    oauthError ? "Sign-in with Google or X failed. Use email instead." : null,
+    oauthError
+      ? "X or Google did not finish. Try again, or use email."
+      : null,
   );
 
   useEffect(() => {
@@ -78,7 +86,7 @@ function Login() {
       setError(
         err instanceof Error
           ? err.message
-          : `${label} sign-in failed. Use email instead.`,
+          : `${label} sign-in failed. Try email instead.`,
       );
       setPending(null);
     }
@@ -94,7 +102,29 @@ function Login() {
           : "Create the admin login. Compression happens when you pick a file."}
       </p>
 
+      {authEnabled ? (
+        <div className="mt-10 space-y-3">
+          {PROVIDERS.map((provider) => (
+            <button
+              key={provider.providerId}
+              type="button"
+              disabled={pending !== null}
+              onClick={() => void onProvider(provider.providerId, provider.label)}
+              className={cn(
+                provider.label === "X" ? btnPrimary : btnQuiet,
+                "w-full",
+              )}
+            >
+              {pending === provider.providerId
+                ? "Opening"
+                : `Continue with ${provider.label}`}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
       <form onSubmit={onEmail} className="mt-10 space-y-4">
+        <p className="text-sm text-muted">Or email</p>
         <label className="block">
           <span className="text-sm text-muted">Email</span>
           <input
@@ -122,34 +152,15 @@ function Login() {
         <button
           type="submit"
           disabled={pending !== null || hasAdmin === null}
-          className={cn(btnPrimary, "w-full")}
+          className={cn(btnQuiet, "w-full")}
         >
           {pending === "email"
             ? "Signing in"
             : hasAdmin
-              ? "Sign in"
+              ? "Sign in with email"
               : "Create admin"}
         </button>
       </form>
-
-      {authEnabled ? (
-        <div className="mt-8 space-y-3">
-          <p className="text-sm text-muted">Or</p>
-          {GROK_PROVIDERS.map((provider) => (
-            <button
-              key={provider.providerId}
-              type="button"
-              disabled={pending !== null}
-              onClick={() => void onProvider(provider.providerId, provider.label)}
-              className={cn(btnQuiet, "w-full")}
-            >
-              {pending === provider.providerId
-                ? "Opening"
-                : `Continue with ${provider.label}`}
-            </button>
-          ))}
-        </div>
-      ) : null}
     </main>
   );
 }
