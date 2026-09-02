@@ -4,8 +4,8 @@ export const SITE = {
   line: "Editorial fitness photography. Winchester.",
   positioning: "Editorial fitness photography. Studio, physique, boudoir.",
   email: "j8shb@icloud.com",
-  instagramHandle: "j8studios",
-  instagramUrl: "https://instagram.com/j8studios",
+  instagramHandle: "j8shb",
+  instagramUrl: "https://instagram.com/j8shb",
   hold: 50,
 } as const;
 
