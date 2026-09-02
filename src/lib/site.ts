@@ -9,56 +9,144 @@ export const SITE = {
   hold: 50,
 } as const;
 
-export const STUDIO_IDS = ["hampshire", "london", "northampton"] as const;
-export type StudioId = (typeof STUDIO_IDS)[number];
+export const PACKAGE_IDS = [
+  "studio-days",
+  "signature",
+  "duo",
+  "group",
+] as const;
+export type PackageId = (typeof PACKAGE_IDS)[number];
 
-export type Studio = {
-  id: StudioId;
-  city: string;
+export type ShootPackage = {
+  id: PackageId;
   name: string;
-  vibe: string;
+  blurb?: string;
+  price: number | null;
+  each?: number;
   hours: string;
-  price: number;
-  image: string;
+  includes: string[];
 };
 
-export const STUDIOS: Studio[] = [
+export const PACKAGES: ShootPackage[] = [
   {
-    id: "hampshire",
-    city: "Hampshire",
-    name: "The Andover Studio",
-    vibe: "Close, large, natural light. The local room, not the premium one.",
+    id: "studio-days",
+    name: "Studio Days",
+    blurb:
+      "Your own private 1.5 hour slot. Reduced rate — Josh is in the studio all day.",
+    price: 250,
+    hours: "1.5 hours",
+    includes: [
+      "10 edited images, chosen by you",
+      "Studio cost included",
+    ],
+  },
+  {
+    id: "signature",
+    name: "Signature Private Shoot",
+    price: 350,
     hours: "2 hours",
-    price: 265,
-    image: "/images/studios/hampshire.jpg",
+    includes: [
+      "15 edited images, chosen by you",
+      "Studio cost included",
+      "BTS footage included",
+    ],
+  },
+  {
+    id: "duo",
+    name: "Duo Shoot",
+    price: 450,
+    each: 250,
+    hours: "3 hours",
+    includes: [
+      "10 edited images each, chosen by you",
+      "Studio cost included",
+      "BTS footage included",
+    ],
+  },
+  {
+    id: "group",
+    name: "Group Shoots",
+    price: null,
+    hours: "4–6 hours",
+    includes: ["Custom pricing"],
+  },
+];
+
+export const SEED_VENUE_IDS = ["northampton", "london", "hampshire"] as const;
+
+export type Venue = {
+  id: string;
+  city: string;
+  name: string;
+  note: string;
+  recommended: boolean;
+  image?: string;
+};
+
+export const VENUE_IMAGES: Record<string, string> = {
+  hampshire: "/images/studios/hampshire.jpg",
+  london: "/images/studios/london.jpg",
+  northampton: "/images/studios/northampton.jpg",
+};
+
+export const VENUES: Venue[] = [
+  {
+    id: "northampton",
+    city: "Northampton",
+    name: "Lite Studios, Weedon Bec",
+    note: "The room people wait for.",
+    recommended: true,
+    image: VENUE_IMAGES.northampton,
   },
   {
     id: "london",
     city: "London",
     name: "Flash Studios, E16",
-    vibe: "Clean white studio.",
-    hours: "2 hours",
-    price: 350,
-    image: "/images/studios/london.jpg",
+    note: "Clean white studio.",
+    recommended: false,
+    image: VENUE_IMAGES.london,
   },
   {
-    id: "northampton",
-    city: "Northampton",
-    name: "Lite Studios, Weedon Bec",
-    vibe: "Rustic, premium. The room people wait for.",
-    hours: "2 hours",
-    price: 380,
-    image: "/images/studios/northampton.jpg",
+    id: "hampshire",
+    city: "Andover, Hampshire",
+    name: "The Andover Studio",
+    note: "Close, large, natural light.",
+    recommended: false,
+    image: VENUE_IMAGES.hampshire,
   },
 ];
 
-export function studioById(id: string | undefined | null): Studio | undefined {
+/** @deprecated use VENUES — kept for older call sites */
+export const STUDIOS = VENUES;
+export const STUDIO_IDS = SEED_VENUE_IDS;
+export type StudioId = (typeof SEED_VENUE_IDS)[number];
+export type Studio = Venue;
+
+export function packageById(id: string | undefined | null): ShootPackage | undefined {
   if (!id) return undefined;
-  return STUDIOS.find((s) => s.id === id);
+  return PACKAGES.find((item) => item.id === id);
+}
+
+export function venueById(
+  id: string | undefined | null,
+  list: Venue[] = VENUES,
+): Venue | undefined {
+  if (!id) return undefined;
+  return list.find((item) => item.id === id);
+}
+
+export function studioById(id: string | undefined | null): Venue | undefined {
+  return venueById(id);
 }
 
 export function formatPrice(gbp: number): string {
   return `£${gbp}`;
+}
+
+export function packagePriceLabel(item: ShootPackage): string {
+  if (item.price == null) return "Custom";
+  if (item.each) return `${formatPrice(item.price)} · ${formatPrice(item.each)} each`;
+  return formatPrice(item.price);
 }
 
 export type WorkStill = {
@@ -169,4 +257,13 @@ export function formatMonth(value: string): string {
 export function makeReference(): string {
   const now = Date.now().toString(36).toUpperCase();
   return `J8-${now.slice(-6)}`;
+}
+
+export function slugify(value: string): string {
+  const slug = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 36);
+  return slug || "studio";
 }

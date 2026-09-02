@@ -2,10 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql } from "@/lib/db";
-import { MEDIA_KEYS, isMediaKey, type MediaKey } from "@/lib/media-slots";
+import { isMediaKey } from "@/lib/media-slots";
 
 export type MediaVersion = {
-  key: MediaKey;
+  key: string;
   bytes: number;
   updatedAt: string;
 };
@@ -29,11 +29,15 @@ export const listMedia = createServerFn({ method: "GET" }).handler(async () => {
   return out;
 });
 
+const mediaKeySchema = z.string().min(4).max(64).refine(isMediaKey, {
+  message: "Unknown media slot.",
+});
+
 export const saveMedia = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     z.object({
-      key: z.enum(MEDIA_KEYS),
+      key: mediaKeySchema,
       mime: z.literal("image/jpeg"),
       body: z.string().min(80).max(1_200_000),
       bytes: z.number().int().min(80).max(900_000),
@@ -62,7 +66,7 @@ export const saveMedia = createServerFn({ method: "POST" })
 
 export const clearMedia = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .validator(z.object({ key: z.enum(MEDIA_KEYS) }))
+  .validator(z.object({ key: mediaKeySchema }))
   .handler(async ({ data }) => {
     const sql = await getSql();
     await sql`delete from media where key = ${data.key}`;

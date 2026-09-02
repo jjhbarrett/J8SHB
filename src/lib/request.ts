@@ -1,9 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { makeReference, STUDIO_IDS } from "./site";
+import { makeReference, PACKAGE_IDS } from "./site";
 
 const shootRequestSchema = z.object({
-  studioId: z.enum(STUDIO_IDS),
+  packageId: z.enum(PACKAGE_IDS),
+  studioId: z
+    .string()
+    .trim()
+    .min(2)
+    .max(40)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   day: z.enum(["weekday", "weekend"]),
   month: z.string().regex(/^\d{4}-\d{2}$/),
   name: z.string().trim().min(1).max(80),

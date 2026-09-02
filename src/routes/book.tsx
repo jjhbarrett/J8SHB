@@ -1,27 +1,37 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { PhotoFrame } from "@/components/photo-frame";
 import { StudioCards } from "@/components/studio-cards";
 import { btnPrimary, fieldClass } from "@/lib/chrome";
+import { packageMediaKey } from "@/lib/media-slots";
 import { submitShootRequest } from "@/lib/request";
 import {
   formatMonth,
   formatPrice,
   nextSixMonths,
+  PACKAGES,
+  packageById,
+  packagePriceLabel,
   SITE,
-  studioById,
-  STUDIOS,
+  VENUES,
+  venueById,
   type DayKind,
-  type StudioId,
+  type PackageId,
+  type ShootPackage,
+  type Venue,
 } from "@/lib/site";
+import { listVenues } from "@/lib/venues";
 import { cn } from "@/lib/utils";
 
 type BookSearch = {
   studio?: string;
+  package?: string;
 };
 
 export const Route = createFileRoute("/book")({
   validateSearch: (search: Record<string, unknown>): BookSearch => ({
     studio: typeof search.studio === "string" ? search.studio : undefined,
+    package: typeof search.package === "string" ? search.package : undefined,
   }),
   component: BookPage,
   head: () => ({
@@ -30,12 +40,14 @@ export const Route = createFileRoute("/book")({
 });
 
 function BookPage() {
-  const { studio: studioParam } = Route.useSearch();
+  const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const months = useMemo(() => nextSixMonths(), []);
+  const [venues, setVenues] = useState<Venue[]>(VENUES);
 
-  const initialStudio = studioById(studioParam)?.id ?? null;
-  const [studioId, setStudioId] = useState<StudioId | null>(initialStudio);
+  const initialPackage = packageById(search.package)?.id ?? null;
+  const [packageId, setPackageId] = useState<PackageId | null>(initialPackage);
+  const [studioId, setStudioId] = useState<string | null>(search.studio ?? null);
   const [day, setDay] = useState<DayKind | null>(null);
   const [month, setMonth] = useState(months[0]?.value ?? "");
   const [name, setName] = useState("");
@@ -45,7 +57,8 @@ function BookPage() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{
     reference: string;
-    studioId: StudioId;
+    packageId: PackageId;
+    studioId: string;
     day: DayKind;
     month: string;
     name: string;
@@ -54,28 +67,49 @@ function BookPage() {
   } | null>(null);
 
   useEffect(() => {
-    const next = studioById(studioParam)?.id ?? null;
-    if (next) setStudioId(next);
-  }, [studioParam]);
+    void listVenues().then(setVenues).catch(() => undefined);
+  }, []);
 
-  const studio = studioById(studioId ?? undefined);
+  useEffect(() => {
+    const next = packageById(search.package)?.id ?? null;
+    if (next) setPackageId(next);
+  }, [search.package]);
+
+  useEffect(() => {
+    if (search.studio) setStudioId(search.studio);
+  }, [search.studio]);
+
+  const shoot = packageById(packageId);
+  const studio = venueById(studioId, venues);
   const canRequest = Boolean(
-    studio && day && month && name.trim() && instagram.trim(),
+    shoot && studio && day && month && name.trim() && instagram.trim(),
   );
 
-  function selectStudio(id: StudioId) {
+  function selectPackage(id: PackageId) {
+    setPackageId(id);
+    void navigate({
+      search: (prev) => ({ ...prev, package: id }),
+      replace: true,
+    });
+  }
+
+  function selectStudio(id: string) {
     setStudioId(id);
-    void navigate({ search: { studio: id }, replace: true });
+    void navigate({
+      search: (prev) => ({ ...prev, studio: id }),
+      replace: true,
+    });
   }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
-    if (!studio || !day || !month) return;
+    if (!shoot || !studio || !day || !month) return;
     setError(null);
     setPending(true);
     try {
       const result = await submitShootRequest({
         data: {
+          packageId: shoot.id,
           studioId: studio.id,
           day,
           month,
@@ -86,6 +120,7 @@ function BookPage() {
       });
       setDone({
         reference: result.reference,
+        packageId: shoot.id,
         studioId: studio.id,
         day,
         month,
@@ -101,7 +136,8 @@ function BookPage() {
   }
 
   if (done) {
-    const booked = studioById(done.studioId);
+    const booked = venueById(done.studioId, venues);
+    const bookedShoot = packageById(done.packageId);
     return (
       <main className="mx-auto w-full max-w-2xl px-5 py-12 sm:py-20">
         <p className="text-sm font-medium text-muted">Request received</p>
@@ -113,11 +149,17 @@ function BookPage() {
         <dl className="mt-12 space-y-5 text-body">
           <Row label="Reference" value={done.reference} />
           <Row
+            label="Shoot"
+            value={
+              bookedShoot
+                ? `${bookedShoot.name} · ${packagePriceLabel(bookedShoot)}`
+                : done.packageId
+            }
+          />
+          <Row
             label="Studio"
             value={
-              booked
-                ? `${booked.name} · ${booked.city} · ${formatPrice(booked.price)}`
-                : done.studioId
+              booked ? `${booked.name} · ${booked.city}` : done.studioId
             }
           />
           <Row
@@ -126,7 +168,7 @@ function BookPage() {
           />
           <Row label="Name" value={done.name} />
           <Row label="Instagram" value={`@${done.instagram}`} />
-          {done.note ? <Row label="Shoot" value={done.note} /> : null}
+          {done.note ? <Row label="Note" value={done.note} /> : null}
         </dl>
         <p className="mt-12 text-body text-muted">
           Screenshot this page. Confirmation comes by email or Instagram.
@@ -138,30 +180,44 @@ function BookPage() {
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-12 sm:py-16">
       <p className="text-sm font-medium text-muted">Book a shoot</p>
-      <h1 className="mt-4 text-display text-fg">Request a studio</h1>
+      <h1 className="mt-4 text-display text-fg">Request a date</h1>
       <p className="mt-4 max-w-xl text-body text-muted">
-        Two hours. Josh checks his diary and the room. This is a request, not a
-        payment.
+        Prices include the studio. Josh checks his diary and the room. This is a
+        request, not a payment.
       </p>
 
       <form onSubmit={onSubmit} className="mt-16 space-y-16">
         <section>
-          <Step n="01" title="Choose the studio" />
-          <div className="mt-8">
-            <StudioCards
-              studios={STUDIOS}
-              selectedId={studioId}
-              onSelect={selectStudio}
-            />
-          </div>
-          <p className="mt-8 text-body text-muted">
-            Prices include the studio. You don’t pay the room on top.
-          </p>
+          <Step n="01" title="Choose the shoot" />
+          <ul className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            {PACKAGES.map((item) => (
+              <li key={item.id}>
+                <PackageChoice
+                  item={item}
+                  selected={packageId === item.id}
+                  onSelect={() => selectPackage(item.id)}
+                />
+              </li>
+            ))}
+          </ul>
         </section>
 
-        {studio ? (
+        {shoot ? (
           <section className="fade-in">
-            <Step n="02" title="When" />
+            <Step n="02" title="Choose the studio" />
+            <div className="mt-8">
+              <StudioCards
+                studios={venues}
+                selectedId={studioId}
+                onSelect={selectStudio}
+              />
+            </div>
+          </section>
+        ) : null}
+
+        {shoot && studio ? (
+          <section className="fade-in">
+            <Step n="03" title="When" />
             <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-12">
               <fieldset>
                 <legend className="text-sm text-muted">Day</legend>
@@ -202,9 +258,9 @@ function BookPage() {
           </section>
         ) : null}
 
-        {studio && day ? (
+        {shoot && studio && day ? (
           <section className="fade-in">
-            <Step n="03" title="Who" />
+            <Step n="04" title="Who" />
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-6">
               <label className="block">
                 <span className="text-sm text-muted">Name</span>
@@ -241,12 +297,12 @@ function BookPage() {
           </section>
         ) : null}
 
-        {studio && day ? (
+        {shoot && studio && day ? (
           <section className="fade-in pb-8">
-            <Step n="04" title="Request" />
+            <Step n="05" title="Request" />
             <p className="mt-6 max-w-xl text-body text-muted">
-              {studio.name}, {studio.city}. {day === "weekend" ? "Weekend" : "Weekday"}{" "}
-              {formatMonth(month)}. {formatPrice(studio.price)}, including the room.
+              {shoot.name}, {packagePriceLabel(shoot)}. {studio.name}, {studio.city}.{" "}
+              {day === "weekend" ? "Weekend" : "Weekday"} {formatMonth(month)}.
             </p>
             {error ? <p className="mt-4 text-body text-muted">{error}</p> : null}
             <button
@@ -260,6 +316,38 @@ function BookPage() {
         ) : null}
       </form>
     </main>
+  );
+}
+
+function PackageChoice({
+  item,
+  selected,
+  onSelect,
+}: {
+  item: ShootPackage;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button type="button" onClick={onSelect} aria-pressed={selected} className="w-full text-left">
+      <PhotoFrame
+        mediaKey={packageMediaKey(item.id)}
+        alt={item.name}
+        label="SHOOT"
+        className={cn(
+          "aspect-studio",
+          selected && "ring-2 ring-fg ring-offset-4 ring-offset-bg",
+        )}
+        width={1200}
+        height={900}
+        sizes="(min-width: 640px) 50vw, 100vw"
+      />
+      <div className="mt-4 flex items-baseline justify-between gap-3">
+        <h3 className="text-xl font-normal tracking-display text-fg">{item.name}</h3>
+        <p className="text-sm font-medium text-fg">{packagePriceLabel(item)}</p>
+      </div>
+      <p className="mt-2 text-sm text-muted">{item.hours}</p>
+    </button>
   );
 }
 

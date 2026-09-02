@@ -15,6 +15,9 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="flex flex-col gap-3 text-sm text-muted">
+          <Link to="/pricing" className="transition-opacity duration-200 hover:text-fg">
+            Pricing
+          </Link>
           <a
             href={SITE.instagramUrl}
             className="transition-opacity duration-200 hover:text-fg"

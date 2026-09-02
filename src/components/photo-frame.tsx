@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useMedia } from "@/lib/media-context";
-import type { MediaKey } from "@/lib/media-slots";
 import { cn } from "@/lib/utils";
 
 type PhotoFrameProps = {
   src?: string;
-  mediaKey?: MediaKey;
+  mediaKey?: string;
   alt: string;
-  label?: "STUDIO" | "PORTFOLIO";
+  label?: "STUDIO" | "PORTFOLIO" | "SHOOT";
   className?: string;
   imgClassName?: string;
   priority?: boolean;

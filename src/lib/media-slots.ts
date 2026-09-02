@@ -1,8 +1,14 @@
+import { PACKAGE_IDS, type PackageId } from "@/lib/site";
+
 export const MEDIA_KEYS = [
   "hero",
   "studio-hampshire",
   "studio-london",
   "studio-northampton",
+  "package-studio-days",
+  "package-signature",
+  "package-duo",
+  "package-group",
   "work-01",
   "work-02",
   "work-03",
@@ -17,13 +23,17 @@ export const MEDIA_KEYS = [
   "work-12",
 ] as const;
 
-export type MediaKey = (typeof MEDIA_KEYS)[number];
+export type StaticMediaKey = (typeof MEDIA_KEYS)[number];
+export type MediaKey = string;
+
+const MEDIA_KEY_PATTERN =
+  /^(hero|work-\d{2}|studio-[a-z0-9]+(?:-[a-z0-9]+)*|package-[a-z0-9-]+)$/;
 
 export type MediaSlot = {
   key: MediaKey;
   label: string;
-  group: "Home" | "Studios" | "Work";
-  fallback: string;
+  group: "Home" | "Shoots" | "Studios" | "Work";
+  fallback?: string;
   maxWidth: number;
 };
 
@@ -36,10 +46,34 @@ export const MEDIA_SLOTS: MediaSlot[] = [
     maxWidth: 1600,
   },
   {
-    key: "studio-hampshire",
-    label: "Hampshire",
+    key: "package-studio-days",
+    label: "Studio Days",
+    group: "Shoots",
+    maxWidth: 1400,
+  },
+  {
+    key: "package-signature",
+    label: "Signature Private Shoot",
+    group: "Shoots",
+    maxWidth: 1400,
+  },
+  {
+    key: "package-duo",
+    label: "Duo Shoot",
+    group: "Shoots",
+    maxWidth: 1400,
+  },
+  {
+    key: "package-group",
+    label: "Group Shoots",
+    group: "Shoots",
+    maxWidth: 1400,
+  },
+  {
+    key: "studio-northampton",
+    label: "Northampton",
     group: "Studios",
-    fallback: "/images/studios/hampshire.jpg",
+    fallback: "/images/studios/northampton.jpg",
     maxWidth: 1000,
   },
   {
@@ -50,10 +84,10 @@ export const MEDIA_SLOTS: MediaSlot[] = [
     maxWidth: 1000,
   },
   {
-    key: "studio-northampton",
-    label: "Northampton",
+    key: "studio-hampshire",
+    label: "Andover, Hampshire",
     group: "Studios",
-    fallback: "/images/studios/northampton.jpg",
+    fallback: "/images/studios/hampshire.jpg",
     maxWidth: 1000,
   },
   {
@@ -142,25 +176,55 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   },
 ];
 
-export const MEDIA_FALLBACKS: Record<MediaKey, string> = Object.fromEntries(
-  MEDIA_SLOTS.map((slot) => [slot.key, slot.fallback]),
-) as Record<MediaKey, string>;
+export const MEDIA_FALLBACKS: Record<string, string> = Object.fromEntries(
+  MEDIA_SLOTS.filter((slot) => slot.fallback).map((slot) => [
+    slot.key,
+    slot.fallback as string,
+  ]),
+);
 
-export function isMediaKey(value: string): value is MediaKey {
-  return (MEDIA_KEYS as readonly string[]).includes(value);
+export function isMediaKey(value: string): boolean {
+  return value.length >= 4 && value.length <= 64 && MEDIA_KEY_PATTERN.test(value);
 }
 
-export function mediaUrl(key: MediaKey, updatedAt: string | number): string {
+export function mediaUrl(key: string, updatedAt: string | number): string {
   return `/api/media?key=${encodeURIComponent(key)}&t=${encodeURIComponent(String(updatedAt))}`;
 }
 
-export function studioMediaKey(
-  id: "hampshire" | "london" | "northampton",
-): MediaKey {
+export function studioMediaKey(id: string): MediaKey {
   return `studio-${id}`;
+}
+
+export function studioGalleryKey(id: string, index: number): MediaKey {
+  return `studio-${id}-${index}`;
+}
+
+export function packageMediaKey(id: PackageId): MediaKey {
+  return `package-${id}`;
 }
 
 export function workMediaKey(id: string): MediaKey {
   const key = `work-${id}`;
   return isMediaKey(key) ? key : "work-01";
 }
+
+export function isStudioCoverKey(key: string, venueId: string): boolean {
+  return key === studioMediaKey(venueId);
+}
+
+export function isStudioGalleryKey(key: string, venueId: string): boolean {
+  return key.startsWith(`studio-${venueId}-`) && isMediaKey(key);
+}
+
+export function nextStudioGalleryKey(venueId: string, keys: string[]): MediaKey {
+  let max = 1;
+  const prefix = `studio-${venueId}-`;
+  for (const key of keys) {
+    if (!key.startsWith(prefix)) continue;
+    const n = Number(key.slice(prefix.length));
+    if (Number.isFinite(n) && n > max) max = n;
+  }
+  return studioGalleryKey(venueId, max + 1);
+}
+
+export { PACKAGE_IDS };

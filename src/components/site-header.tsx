@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/work", label: "Work" },
+  { to: "/pricing", label: "Pricing" },
   { to: "/book", label: "Book" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -31,7 +32,7 @@ export function SiteHeader() {
           aria-label="Primary"
           className="flex items-center justify-between sm:justify-end sm:gap-8"
         >
-          <ul className="flex items-center gap-5 sm:gap-8">
+          <ul className="flex flex-wrap items-center gap-4 sm:gap-8">
             {NAV.map((item) => {
               const active = pathname === item.to;
               return (

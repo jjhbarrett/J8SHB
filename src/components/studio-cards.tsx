@@ -1,13 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { studioMediaKey } from "@/lib/media-slots";
-import { formatPrice, type Studio, type StudioId } from "@/lib/site";
+import { type Venue } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PhotoFrame } from "./photo-frame";
 
 type StudioCardsProps = {
-  studios: Studio[];
-  selectedId?: StudioId | null;
-  onSelect?: (id: StudioId) => void;
+  studios: Venue[];
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
   linkToBook?: boolean;
 };
 
@@ -38,15 +38,16 @@ export function StudioCards({
             />
             <div className="mt-5 flex items-baseline justify-between gap-4">
               <p className="text-sm text-muted">{studio.city}</p>
-              <p className="text-lg font-medium text-fg">
-                {formatPrice(studio.price)}
-              </p>
+              {studio.recommended ? (
+                <p className="text-sm font-medium text-fg">Recommended</p>
+              ) : null}
             </div>
             <h3 className="mt-1 text-xl font-normal tracking-display text-fg">
               {studio.name}
             </h3>
-            <p className="mt-2 text-body text-muted">{studio.vibe}</p>
-            <p className="mt-3 text-sm text-muted">{studio.hours}</p>
+            {studio.note ? (
+              <p className="mt-2 text-body text-muted">{studio.note}</p>
+            ) : null}
           </>
         );
 
