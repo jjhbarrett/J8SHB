@@ -93,9 +93,9 @@ export type Venue = {
 };
 
 export const VENUE_IMAGES: Record<string, string> = {
-  hampshire: "/images/studios/hampshire.jpg",
-  london: "/images/studios/london.jpg",
-  northampton: "/images/studios/northampton.jpg",
+  hampshire: "/media/studio-hampshire.jpg",
+  london: "/media/studio-london.jpg",
+  northampton: "/media/studio-northampton.jpg",
 };
 
 export const VENUES: Venue[] = [
@@ -184,73 +184,73 @@ export type WorkStill = {
 export const WORK: WorkStill[] = [
   {
     id: "01",
-    src: "/images/work/01.jpg",
+    src: "/media/work-01.jpg",
     alt: "Fitness physique, studio",
     kind: "physique",
   },
   {
     id: "02",
-    src: "/images/work/02.jpg",
+    src: "/media/work-02.jpg",
     alt: "Contemporary dance, studio",
     kind: "dance",
   },
   {
     id: "03",
-    src: "/images/work/03.jpg",
+    src: "/media/work-03.jpg",
     alt: "Bodybuilding portrait, studio",
     kind: "physique",
   },
   {
     id: "04",
-    src: "/images/work/04.jpg",
+    src: "/media/work-04.jpg",
     alt: "Fitness portrait, studio",
     kind: "portrait",
   },
   {
     id: "05",
-    src: "/images/work/05.jpg",
+    src: "/media/work-05.jpg",
     alt: "Physique, back and shoulders",
     kind: "physique",
   },
   {
     id: "06",
-    src: "/images/work/06.jpg",
+    src: "/media/work-06.jpg",
     alt: "Dance still, studio",
     kind: "dance",
   },
   {
     id: "07",
-    src: "/images/work/07.jpg",
+    src: "/media/work-07.jpg",
     alt: "Studio boudoir, silk robe",
     kind: "boudoir",
   },
   {
     id: "08",
-    src: "/images/work/08.jpg",
+    src: "/media/work-08.jpg",
     alt: "Physique in profile, studio",
     kind: "physique",
   },
   {
     id: "09",
-    src: "/images/work/09.jpg",
+    src: "/media/work-09.jpg",
     alt: "Physique portrait, studio",
     kind: "portrait",
   },
   {
     id: "10",
-    src: "/images/work/10.jpg",
+    src: "/media/work-10.jpg",
     alt: "Dance still, studio",
     kind: "dance",
   },
   {
     id: "11",
-    src: "/images/work/11.jpg",
+    src: "/media/work-11.jpg",
     alt: "Close crop, studio portrait",
     kind: "portrait",
   },
   {
     id: "12",
-    src: "/images/work/12.jpg",
+    src: "/media/work-12.jpg",
     alt: "Physique, full figure in studio",
     kind: "physique",
   },

@@ -30,7 +30,7 @@ export function PhotoFrame({
   zoom = true,
 }: PhotoFrameProps) {
   const { srcFor } = useMedia();
-  const resolved = mediaKey ? srcFor(mediaKey, src) : src;
+  const resolved = mediaKey ? srcFor(mediaKey) : src;
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {

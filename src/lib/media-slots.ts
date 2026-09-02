@@ -33,162 +33,43 @@ export type MediaSlot = {
   key: MediaKey;
   label: string;
   group: "Home" | "Shoots" | "Studios" | "Work";
-  fallback?: string;
   maxWidth: number;
 };
 
 export const MEDIA_SLOTS: MediaSlot[] = [
-  {
-    key: "hero",
-    label: "Home hero",
-    group: "Home",
-    fallback: "/images/hero.jpg",
-    maxWidth: 1600,
-  },
-  {
-    key: "package-studio-days",
-    label: "Studio Days",
-    group: "Shoots",
-    maxWidth: 1400,
-  },
-  {
-    key: "package-signature",
-    label: "1–1 Private",
-    group: "Shoots",
-    maxWidth: 1400,
-  },
-  {
-    key: "package-duo",
-    label: "Duo Shoot",
-    group: "Shoots",
-    maxWidth: 1400,
-  },
-  {
-    key: "package-group",
-    label: "Group Shoot",
-    group: "Shoots",
-    maxWidth: 1400,
-  },
-  {
-    key: "studio-northampton",
-    label: "Northampton",
-    group: "Studios",
-    fallback: "/images/studios/northampton.jpg",
-    maxWidth: 1000,
-  },
-  {
-    key: "studio-london",
-    label: "London",
-    group: "Studios",
-    fallback: "/images/studios/london.jpg",
-    maxWidth: 1000,
-  },
-  {
-    key: "studio-hampshire",
-    label: "Andover, Hampshire",
-    group: "Studios",
-    fallback: "/images/studios/hampshire.jpg",
-    maxWidth: 1000,
-  },
-  {
-    key: "work-01",
-    label: "Work 01",
-    group: "Work",
-    fallback: "/images/work/01.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-02",
-    label: "Work 02",
-    group: "Work",
-    fallback: "/images/work/02.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-03",
-    label: "Work 03",
-    group: "Work",
-    fallback: "/images/work/03.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-04",
-    label: "Work 04",
-    group: "Work",
-    fallback: "/images/work/04.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-05",
-    label: "Work 05",
-    group: "Work",
-    fallback: "/images/work/05.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-06",
-    label: "Work 06",
-    group: "Work",
-    fallback: "/images/work/06.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-07",
-    label: "Work 07",
-    group: "Work",
-    fallback: "/images/work/07.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-08",
-    label: "Work 08",
-    group: "Work",
-    fallback: "/images/work/08.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-09",
-    label: "Work 09",
-    group: "Work",
-    fallback: "/images/work/09.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-10",
-    label: "Work 10",
-    group: "Work",
-    fallback: "/images/work/10.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-11",
-    label: "Work 11",
-    group: "Work",
-    fallback: "/images/work/11.jpg",
-    maxWidth: 800,
-  },
-  {
-    key: "work-12",
-    label: "Work 12",
-    group: "Work",
-    fallback: "/images/work/12.jpg",
-    maxWidth: 800,
-  },
+  { key: "hero", label: "Home hero", group: "Home", maxWidth: 1600 },
+  { key: "package-studio-days", label: "Studio Days", group: "Shoots", maxWidth: 1400 },
+  { key: "package-signature", label: "1–1 Private", group: "Shoots", maxWidth: 1400 },
+  { key: "package-duo", label: "Duo Shoot", group: "Shoots", maxWidth: 1400 },
+  { key: "package-group", label: "Group Shoot", group: "Shoots", maxWidth: 1400 },
+  { key: "studio-northampton", label: "Northampton", group: "Studios", maxWidth: 1000 },
+  { key: "studio-london", label: "London", group: "Studios", maxWidth: 1000 },
+  { key: "studio-hampshire", label: "Andover, Hampshire", group: "Studios", maxWidth: 1000 },
+  { key: "work-01", label: "Work 01", group: "Work", maxWidth: 800 },
+  { key: "work-02", label: "Work 02", group: "Work", maxWidth: 800 },
+  { key: "work-03", label: "Work 03", group: "Work", maxWidth: 800 },
+  { key: "work-04", label: "Work 04", group: "Work", maxWidth: 800 },
+  { key: "work-05", label: "Work 05", group: "Work", maxWidth: 800 },
+  { key: "work-06", label: "Work 06", group: "Work", maxWidth: 800 },
+  { key: "work-07", label: "Work 07", group: "Work", maxWidth: 800 },
+  { key: "work-08", label: "Work 08", group: "Work", maxWidth: 800 },
+  { key: "work-09", label: "Work 09", group: "Work", maxWidth: 800 },
+  { key: "work-10", label: "Work 10", group: "Work", maxWidth: 800 },
+  { key: "work-11", label: "Work 11", group: "Work", maxWidth: 800 },
+  { key: "work-12", label: "Work 12", group: "Work", maxWidth: 800 },
 ];
-
-export const MEDIA_FALLBACKS: Record<string, string> = Object.fromEntries(
-  MEDIA_SLOTS.filter((slot) => slot.fallback).map((slot) => [
-    slot.key,
-    slot.fallback as string,
-  ]),
-);
 
 export function isMediaKey(value: string): boolean {
   return value.length >= 4 && value.length <= 64 && MEDIA_KEY_PATTERN.test(value);
 }
 
+export function stillFileUrl(key: string, updatedAt?: string | number): string {
+  const stamp = updatedAt ? `?t=${encodeURIComponent(String(updatedAt))}` : "";
+  return `/media/${key}.jpg${stamp}`;
+}
+
 export function mediaUrl(key: string, updatedAt: string | number): string {
-  return `/api/media?key=${encodeURIComponent(key)}&t=${encodeURIComponent(String(updatedAt))}`;
+  return stillFileUrl(key, updatedAt);
 }
 
 export function studioMediaKey(id: string): MediaKey {

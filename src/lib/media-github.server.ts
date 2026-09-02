@@ -8,7 +8,7 @@ import { promisify } from "node:util";
 import git from "isomorphic-git";
 import http from "isomorphic-git/http/node";
 import { Client } from "ssh2";
-import { isMediaKey } from "@/lib/media-slots";
+import { isMediaKey, stillFileUrl } from "@/lib/media-slots";
 import {
   GITHUB_KNOWN_HOSTS,
   revealDeployKey,
@@ -58,7 +58,7 @@ function toList(index: IndexMap): PersistedMedia[] {
       key,
       bytes: row.bytes,
       updatedAt: row.updatedAt,
-      url: RAW_FILE(key, row.updatedAt),
+      url: stillFileUrl(key, row.updatedAt),
     });
   }
   return out;
@@ -148,12 +148,10 @@ async function readIndexFromRaw(): Promise<IndexMap> {
   const fromStills = await fetchJsonMap(RAW_INDEX);
   const fromLegacy = fromStills ?? (await fetchJsonMap(RAW_LEGACY_INDEX));
   let value = fromStills ?? fromLegacy ?? {};
-  if (Object.keys(value).length === 0) {
-    try {
-      value = { ...value, ...(await fetchDirIndex()) };
-    } catch {
-      /* keep what we have */
-    }
+  try {
+    value = { ...(await fetchDirIndex()), ...value };
+  } catch {
+    /* keep stills.json */
   }
   indexCache = { at: now, value };
   return value;

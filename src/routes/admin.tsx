@@ -225,7 +225,6 @@ function StudioImages() {
                     key: studioMediaKey(venue.id),
                     label: "Cover",
                     group: "Studios",
-                    fallback: venue.image,
                     maxWidth: 1000,
                   }}
                   emptyLabel="STUDIO"
@@ -387,7 +386,7 @@ function SlotCard({
   const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const version = versions[slot.key];
-  const src = srcFor(slot.key, slot.fallback);
+  const src = srcFor(slot.key);
 
   async function onFile(file: File | undefined) {
     if (!file) return;
@@ -425,7 +424,7 @@ function SlotCard({
     try {
       await clearMedia({ data: { key: slot.key } });
       patch({ key: slot.key, clear: true });
-      setNote(slot.fallback ? "Original restored." : "Removed.");
+      setNote("Removed.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not restore.");
     } finally {
@@ -448,7 +447,7 @@ function SlotCard({
         <div className="flex items-baseline justify-between gap-3">
           <p className="text-sm font-medium text-fg">{slot.label}</p>
           <p className="text-sm text-muted">
-            {version ? formatBytes(version.bytes) : slot.fallback ? "Original" : "Empty"}
+            {version ? formatBytes(version.bytes) : "Empty"}
           </p>
         </div>
         <input
@@ -478,7 +477,7 @@ function SlotCard({
               onClick={() => void restore()}
               className={cn(btnQuiet, "min-h-10 px-4")}
             >
-              {busy === "clear" ? "Restoring" : slot.fallback ? "Restore" : "Remove"}
+              {busy === "clear" ? "Removing" : "Remove"}
             </button>
           ) : null}
         </div>

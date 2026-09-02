@@ -20,7 +20,6 @@ function Home() {
       <section className="px-4 pt-2 sm:px-6">
         <div className="relative mx-auto min-h-[78svh] max-w-7xl overflow-hidden rounded-xl">
           <PhotoFrame
-            src="/images/hero.jpg"
             mediaKey="hero"
             alt="Editorial physique photograph, studio"
             label="PORTFOLIO"
