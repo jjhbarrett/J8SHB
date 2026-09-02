@@ -7,6 +7,7 @@ import {
   signIn,
 } from "@/lib/auth/client";
 import { adminExists } from "@/lib/admin-auth";
+import { grokOAuthButtonsOnHost } from "@/lib/oauth-host";
 import { btnPrimary, btnQuiet, fieldClass } from "@/lib/chrome";
 import { cn } from "@/lib/utils";
 
@@ -32,14 +33,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hasAdmin, setHasAdmin] = useState<boolean | null>(null);
+  const [oauthOk, setOauthOk] = useState(false);
   const [pending, setPending] = useState<"email" | string | null>(null);
   const [error, setError] = useState<string | null>(
     oauthError
-      ? "X or Google did not finish. Try again, or use email."
+      ? "X did not finish. Use email to open admin."
       : null,
   );
 
   useEffect(() => {
+    setOauthOk(grokOAuthButtonsOnHost(window.location.hostname));
     void adminExists()
       .then(setHasAdmin)
       .catch(() => setHasAdmin(false));
@@ -86,11 +89,13 @@ function Login() {
       setError(
         err instanceof Error
           ? err.message
-          : `${label} sign-in failed. Try email instead.`,
+          : `${label} sign-in failed. Use email instead.`,
       );
       setPending(null);
     }
   }
+
+  const showOauth = authEnabled && oauthOk;
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-5 py-16">
@@ -102,7 +107,7 @@ function Login() {
           : "Create the admin login. Compression happens when you pick a file."}
       </p>
 
-      {authEnabled ? (
+      {showOauth ? (
         <div className="mt-10 space-y-3">
           {PROVIDERS.map((provider) => (
             <button
@@ -124,7 +129,7 @@ function Login() {
       ) : null}
 
       <form onSubmit={onEmail} className="mt-10 space-y-4">
-        <p className="text-sm text-muted">Or email</p>
+        {showOauth ? <p className="text-sm text-muted">Or email</p> : null}
         <label className="block">
           <span className="text-sm text-muted">Email</span>
           <input
@@ -152,7 +157,7 @@ function Login() {
         <button
           type="submit"
           disabled={pending !== null || hasAdmin === null}
-          className={cn(btnQuiet, "w-full")}
+          className={cn(showOauth ? btnQuiet : btnPrimary, "w-full")}
         >
           {pending === "email"
             ? "Signing in"
