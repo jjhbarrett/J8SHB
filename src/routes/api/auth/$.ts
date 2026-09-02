@@ -3,8 +3,7 @@ import { grokOAuthWorksOnHost } from "@/lib/oauth-host";
 import { createFileRoute } from "@tanstack/react-router";
 import { auth } from "@/lib/auth/server";
 
-const OAUTH_UNAVAILABLE =
-  "X and Google cannot finish on this site. Use email.";
+const OAUTH_UNAVAILABLE = "Only @j8shb can open admin.";
 
 function loginErrorRedirect(request: Request): Response {
   return Response.redirect(new URL("/login?error=oauth", request.url), 302);

@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { authMiddleware } from "@/lib/auth/middleware";
+import { adminMiddleware } from "@/lib/admin-middleware";
 import { getSql } from "@/lib/db";
 import {
   SEED_VENUE_IDS,
@@ -55,7 +55,7 @@ export const listVenues = createServerFn({ method: "GET" }).handler(async () => 
 });
 
 export const createVenue = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminMiddleware])
   .validator(
     z.object({
       city: z.string().trim().min(2).max(60),
@@ -103,7 +103,7 @@ export const createVenue = createServerFn({ method: "POST" })
   });
 
 export const setVenueRecommended = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminMiddleware])
   .validator(z.object({ id: z.string().min(2).max(40) }))
   .handler(async ({ data }) => {
     const sql = await getSql();
@@ -113,7 +113,7 @@ export const setVenueRecommended = createServerFn({ method: "POST" })
   });
 
 export const deleteVenue = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminMiddleware])
   .validator(z.object({ id: z.string().min(2).max(40) }))
   .handler(async ({ data }) => {
     if ((SEED_VENUE_IDS as readonly string[]).includes(data.id)) {

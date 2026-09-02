@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { authMiddleware } from "@/lib/auth/middleware";
+import { adminMiddleware } from "@/lib/admin-middleware";
 import { getSql } from "@/lib/db";
 import { isMediaKey } from "@/lib/media-slots";
 
@@ -34,7 +34,7 @@ const mediaKeySchema = z.string().min(4).max(64).refine(isMediaKey, {
 });
 
 export const saveMedia = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminMiddleware])
   .validator(
     z.object({
       key: mediaKeySchema,
@@ -65,7 +65,7 @@ export const saveMedia = createServerFn({ method: "POST" })
   });
 
 export const clearMedia = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminMiddleware])
   .validator(z.object({ key: mediaKeySchema }))
   .handler(async ({ data }) => {
     const sql = await getSql();

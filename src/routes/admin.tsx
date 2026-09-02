@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { RedirectToSignIn, UserButton } from "@/lib/auth/gates";
-import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { RedirectToSignIn } from "@/lib/auth/gates";
+import { getAdminStatus, revokeAdmin } from "@/lib/admin-auth";
+import { ADMIN_X_HANDLE } from "@/lib/admin-allowlist";
 import { btnPrimary, btnQuiet, fieldClass } from "@/lib/chrome";
 import { compressImage, formatBytes } from "@/lib/compress-image";
 import { useMedia } from "@/lib/media-context";
@@ -33,15 +34,24 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminPage() {
-  const { user, isPending } = useCurrentUserState();
-  if (isPending) {
+  const navigate = useNavigate();
+  const [admin, setAdmin] = useState<boolean | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
+
+  useEffect(() => {
+    void getAdminStatus()
+      .then((status) => setAdmin(status.admin))
+      .catch(() => setAdmin(false));
+  }, []);
+
+  if (admin === null) {
     return (
       <main className="mx-auto w-full max-w-7xl px-5 py-16">
         <div className="h-8 w-40 rounded-full bg-surface" />
       </main>
     );
   }
-  if (!user) return <RedirectToSignIn />;
+  if (!admin) return <RedirectToSignIn />;
 
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-12 sm:py-16">
@@ -54,7 +64,19 @@ function AdminPage() {
             slot on the site.
           </p>
         </div>
-        <UserButton />
+        <button
+          type="button"
+          disabled={signingOut}
+          onClick={() => {
+            setSigningOut(true);
+            void revokeAdmin()
+              .then(() => navigate({ to: "/" }))
+              .catch(() => setSigningOut(false));
+          }}
+          className="cursor-pointer text-sm text-muted underline-offset-4 hover:text-fg hover:underline disabled:cursor-wait"
+        >
+          {signingOut ? "Signing out" : `@${ADMIN_X_HANDLE} · Sign out`}
+        </button>
       </div>
 
       <Group title="Home">
