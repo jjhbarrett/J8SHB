@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { workMediaKey } from "@/lib/media-slots";
 import type { WorkStill } from "@/lib/site";
 import { PhotoFrame } from "./photo-frame";
 
@@ -19,6 +20,7 @@ export function PortfolioGrid({
         const frame = (
           <PhotoFrame
             src={still.src}
+            mediaKey={workMediaKey(still.id)}
             alt={still.alt}
             label="PORTFOLIO"
             className="aspect-still rounded-lg"

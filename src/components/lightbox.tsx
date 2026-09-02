@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { workMediaKey } from "@/lib/media-slots";
 import type { WorkStill } from "@/lib/site";
 import { PhotoFrame } from "./photo-frame";
 
@@ -61,6 +62,7 @@ export function Lightbox({ stills, activeId, onClose, onChange }: LightboxProps)
       <div className="relative z-10 flex h-full w-full items-center justify-center p-4 sm:p-10">
         <PhotoFrame
           src={still.src}
+          mediaKey={workMediaKey(still.id)}
           alt={still.alt}
           label="PORTFOLIO"
           className="max-h-full max-w-full rounded-lg"

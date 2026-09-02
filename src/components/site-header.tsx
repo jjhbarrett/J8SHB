@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { SignedIn } from "@/lib/auth/gates";
 import { btnPrimary } from "@/lib/chrome";
 import { SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,21 @@ export function SiteHeader() {
                 </li>
               );
             })}
+            <SignedIn>
+              <li>
+                <Link
+                  to="/admin"
+                  className={cn(
+                    "inline-flex min-h-11 items-center text-sm font-medium tracking-label transition-opacity duration-200",
+                    pathname === "/admin"
+                      ? "text-fg"
+                      : "text-muted hover:text-fg",
+                  )}
+                >
+                  Admin
+                </Link>
+              </li>
+            </SignedIn>
           </ul>
           <Cta className="hidden sm:inline-flex" />
         </nav>

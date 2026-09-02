@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useMedia } from "@/lib/media-context";
+import type { MediaKey } from "@/lib/media-slots";
 import { cn } from "@/lib/utils";
 
 type PhotoFrameProps = {
   src?: string;
+  mediaKey?: MediaKey;
   alt: string;
   label?: "STUDIO" | "PORTFOLIO";
   className?: string;
@@ -16,6 +19,7 @@ type PhotoFrameProps = {
 
 export function PhotoFrame({
   src,
+  mediaKey,
   alt,
   label = "PORTFOLIO",
   className,
@@ -26,8 +30,15 @@ export function PhotoFrame({
   sizes,
   zoom = true,
 }: PhotoFrameProps) {
+  const { srcFor } = useMedia();
+  const resolved = mediaKey ? srcFor(mediaKey, src) : src;
   const [failed, setFailed] = useState(false);
-  const showImage = Boolean(src) && !failed;
+
+  useEffect(() => {
+    setFailed(false);
+  }, [resolved]);
+
+  const showImage = Boolean(resolved) && !failed;
 
   return (
     <div
@@ -38,7 +49,7 @@ export function PhotoFrame({
     >
       {showImage ? (
         <img
-          src={src}
+          src={resolved}
           alt={alt}
           width={width}
           height={height}

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { studioMediaKey } from "@/lib/media-slots";
 import { formatPrice, type Studio, type StudioId } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PhotoFrame } from "./photo-frame";
@@ -24,6 +25,7 @@ export function StudioCards({
           <>
             <PhotoFrame
               src={studio.image}
+              mediaKey={studioMediaKey(studio.id)}
               alt={`${studio.name}, ${studio.city}`}
               label="STUDIO"
               className={cn(

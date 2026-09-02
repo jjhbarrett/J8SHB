@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { SITE } from "@/lib/site";
 
 export function SiteFooter() {
@@ -26,6 +27,9 @@ export function SiteFooter() {
           >
             {SITE.email}
           </a>
+          <Link to="/admin" className="transition-opacity duration-200 hover:text-fg">
+            Admin
+          </Link>
           <p>© {SITE.name}</p>
         </div>
       </div>

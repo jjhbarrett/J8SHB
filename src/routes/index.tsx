@@ -13,6 +13,7 @@ function Home() {
         <div className="relative mx-auto min-h-[78svh] max-w-7xl overflow-hidden rounded-xl">
           <PhotoFrame
             src="/images/hero.jpg"
+            mediaKey="hero"
             alt="Editorial physique photograph, studio"
             label="PORTFOLIO"
             className="absolute inset-0 h-full w-full rounded-xl"
