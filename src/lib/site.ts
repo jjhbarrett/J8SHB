@@ -106,7 +106,6 @@ export const VENUES: Venue[] = [
     note: "The room people wait for.",
     recommended: true,
     image: VENUE_IMAGES.northampton,
-    travelExcess: 90,
   },
   {
     id: "london",
