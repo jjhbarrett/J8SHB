@@ -81,6 +81,7 @@ function BookPage() {
   const [name, setName] = useState("");
   const [instagram, setInstagram] = useState("");
   const [note, setNote] = useState("");
+  const [company, setCompany] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{
@@ -177,6 +178,7 @@ function BookPage() {
           name: name.trim(),
           instagram: instagram.trim(),
           note: note.trim() || undefined,
+          company: company.trim() || undefined,
         },
       });
       setDone({
@@ -379,6 +381,15 @@ function BookPage() {
                   className={fieldClass}
                   placeholder="fitness / boudoir / dance"
                   maxLength={120}
+                />
+              </label>
+              <label className="sr-only" aria-hidden="true">
+                Company
+                <input
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
               </label>
             </div>

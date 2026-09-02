@@ -5,6 +5,7 @@ import { getAdminStatus, revokeAdmin } from "@/lib/admin-auth";
 import { ADMIN_X_HANDLE } from "@/lib/admin-allowlist";
 import { btnPrimary, btnQuiet, fieldClass } from "@/lib/chrome";
 import { compressImage, formatBytes } from "@/lib/compress-image";
+import { listEnquiries, type EnquiryRow } from "@/lib/enquiries";
 import { useMedia } from "@/lib/media-context";
 import { clearMedia, saveMedia } from "@/lib/media";
 import {
@@ -14,7 +15,7 @@ import {
   studioMediaKey,
   type MediaSlot,
 } from "@/lib/media-slots";
-import { SEED_VENUE_IDS, VENUES, type Venue } from "@/lib/site";
+import { SEED_VENUE_IDS, SITE, VENUES, type Venue } from "@/lib/site";
 import {
   createVenue,
   deleteVenue,
@@ -68,10 +69,10 @@ function AdminPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium text-muted">Admin</p>
-          <h1 className="mt-4 text-display text-fg">Media</h1>
+          <h1 className="mt-4 text-display text-fg">Studio</h1>
           <p className="mt-4 max-w-xl text-body text-muted">
-            Pick a photo. It is compressed automatically, then it replaces that
-            slot on the site.
+            Requests land here and in {SITE.email}. Photos below replace the
+            frames on the site.
           </p>
         </div>
         <button
@@ -88,6 +89,8 @@ function AdminPage() {
           {signingOut ? "Signing out" : `@${ADMIN_X_HANDLE} · Sign out`}
         </button>
       </div>
+
+      <RequestsPanel />
 
       <Group title="Home">
         {MEDIA_SLOTS.filter((slot) => slot.group === "Home").map((slot) => (
@@ -359,6 +362,56 @@ function AddPhotoCard({
       />
       {error ? <p className="p-4 text-sm text-muted">{error}</p> : null}
     </li>
+  );
+}
+
+function RequestsPanel() {
+  const [rows, setRows] = useState<EnquiryRow[] | null>(null);
+
+  useEffect(() => {
+    void listEnquiries()
+      .then(setRows)
+      .catch(() => setRows([]));
+  }, []);
+
+  return (
+    <section className="mt-14">
+      <h2 className="text-sm font-medium text-muted">Requests</h2>
+      <p className="mt-3 max-w-xl text-body text-muted">
+        Each Book and Contact note is emailed to {SITE.email}. A copy stays here.
+      </p>
+      {rows === null ? (
+        <div className="mt-6 h-16 rounded-lg bg-surface" />
+      ) : rows.length === 0 ? (
+        <p className="mt-6 text-body text-fg">None yet.</p>
+      ) : (
+        <ul className="mt-6 divide-y divide-line rounded-lg bg-surface">
+          {rows.map((row) => (
+            <li key={row.id} className="px-5 py-5">
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <p className="text-sm font-medium text-fg">{row.subject}</p>
+                <p className="text-sm text-muted">
+                  {new Date(row.createdAt).toLocaleString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-muted">
+                {row.name}
+                {row.instagram ? ` · @${row.instagram.replace(/^@/, "")}` : ""}
+                {row.email ? ` · ${row.email}` : ""}
+              </p>
+              <pre className="mt-4 whitespace-pre-wrap font-sans text-body text-fg">
+                {row.body}
+              </pre>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 

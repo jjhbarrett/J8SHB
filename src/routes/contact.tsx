@@ -17,6 +17,7 @@ function ContactPage() {
   const [email, setEmail] = useState("");
   const [instagram, setInstagram] = useState("");
   const [message, setMessage] = useState("");
+  const [company, setCompany] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
@@ -46,6 +47,7 @@ function ContactPage() {
           email: email.trim() || undefined,
           instagram: instagram.trim() || undefined,
           message: message.trim(),
+          company: company.trim() || undefined,
         },
       });
       setSent(true);
@@ -112,6 +114,15 @@ function ContactPage() {
               onChange={(e) => setMessage(e.target.value)}
               className={cn(fieldClass, "min-h-28 resize-y")}
               required
+            />
+          </label>
+          <label className="sr-only" aria-hidden="true">
+            Company
+            <input
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
             />
           </label>
           {error ? <p className="text-body text-muted">{error}</p> : null}
