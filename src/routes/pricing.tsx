@@ -164,6 +164,7 @@ function PackageCard({ item }: { item: ShootPackage }) {
       <Link
         to="/book"
         search={{ package: item.id }}
+        hash="book-studio"
         className={cn(btnPrimary, "mt-8")}
       >
         {item.id === "group" ? "Request a group shoot" : "Request this shoot"}

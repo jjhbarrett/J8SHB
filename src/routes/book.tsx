@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { PhotoFrame } from "@/components/photo-frame";
 import { StudioCards } from "@/components/studio-cards";
@@ -29,6 +29,30 @@ type BookSearch = {
   studio?: string;
   package?: string;
 };
+
+const STEP_CLASS = "scroll-mt-32 sm:scroll-mt-24";
+
+function scrollToStep(id: string) {
+  const reduce =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const run = () => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    el.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      block: "start",
+    });
+    return true;
+  };
+  if (run()) return;
+  requestAnimationFrame(() => {
+    if (run()) return;
+    window.setTimeout(() => {
+      run();
+    }, 80);
+  });
+}
 
 export const Route = createFileRoute("/book")({
   validateSearch: (search: Record<string, unknown>): BookSearch => ({
@@ -69,6 +93,7 @@ function BookPage() {
     instagram: string;
     note?: string;
   } | null>(null);
+  const landed = useRef(false);
 
   useEffect(() => {
     void listVenues().then(setVenues).catch(() => undefined);
@@ -89,6 +114,16 @@ function BookPage() {
     if (search.studio) setStudioId(search.studio);
   }, [search.studio]);
 
+  useEffect(() => {
+    if (landed.current) return;
+    if (!packageById(search.package)) return;
+    landed.current = true;
+    const id = search.studio ? "book-when" : "book-studio";
+    scrollToStep(id);
+    const t = window.setTimeout(() => scrollToStep(id), 280);
+    return () => window.clearTimeout(t);
+  }, [search.package, search.studio]);
+
   const shoot = packageById(packageId);
   const studio = venueById(studioId, venues);
   const canRequest = Boolean(
@@ -105,6 +140,7 @@ function BookPage() {
       search: (prev) => ({ ...prev, package: id }),
       replace: true,
     });
+    scrollToStep(studioId ? "book-when" : "book-studio");
   }
 
   function selectStudio(id: string) {
@@ -113,6 +149,17 @@ function BookPage() {
       search: (prev) => ({ ...prev, studio: id }),
       replace: true,
     });
+    scrollToStep("book-when");
+  }
+
+  function selectDay(option: DayKind) {
+    setDay(option);
+    scrollToStep("book-who");
+  }
+
+  function selectMonth(value: string) {
+    setMonth(value);
+    if (day) scrollToStep("book-who");
   }
 
   async function onSubmit(event: FormEvent) {
@@ -205,7 +252,7 @@ function BookPage() {
       </p>
 
       <form onSubmit={onSubmit} className="mt-16 space-y-16">
-        <section>
+        <section id="book-shoot" className={STEP_CLASS}>
           <Step n="01" title="Choose the shoot" />
           <ul className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
             {PACKAGES.map((item) => (
@@ -221,7 +268,7 @@ function BookPage() {
         </section>
 
         {shoot ? (
-          <section className="fade-in">
+          <section id="book-studio" className={cn("fade-in", STEP_CLASS)}>
             <Step n="02" title="Choose the studio" />
             <div className="mt-8">
               <StudioCards
@@ -234,7 +281,7 @@ function BookPage() {
         ) : null}
 
         {shoot && studio ? (
-          <section className="fade-in">
+          <section id="book-when" className={cn("fade-in", STEP_CLASS)}>
             <Step n="03" title="When" />
             {shoot.exclusiveDates ? (
               <div className="mt-8 max-w-xl">
@@ -246,7 +293,7 @@ function BookPage() {
                   <span className="text-sm text-muted">Month</span>
                   <select
                     value={month}
-                    onChange={(e) => setMonth(e.target.value)}
+                    onChange={(e) => selectMonth(e.target.value)}
                     className={cn(fieldClass, "appearance-none")}
                   >
                     {months.map((item) => (
@@ -266,7 +313,7 @@ function BookPage() {
                       <button
                         key={option}
                         type="button"
-                        onClick={() => setDay(option)}
+                        onClick={() => selectDay(option)}
                         aria-pressed={day === option}
                         className={cn(
                           "min-h-11 min-w-28 rounded-full px-4 text-sm font-medium capitalize transition-colors duration-200",
@@ -284,7 +331,7 @@ function BookPage() {
                   <span className="text-sm text-muted">Month</span>
                   <select
                     value={month}
-                    onChange={(e) => setMonth(e.target.value)}
+                    onChange={(e) => selectMonth(e.target.value)}
                     className={cn(fieldClass, "appearance-none")}
                   >
                     {months.map((item) => (
@@ -300,7 +347,7 @@ function BookPage() {
         ) : null}
 
         {shoot && studio && day ? (
-          <section className="fade-in">
+          <section id="book-who" className={cn("fade-in", STEP_CLASS)}>
             <Step n="04" title="Who" />
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-6">
               <label className="block">
@@ -339,7 +386,7 @@ function BookPage() {
         ) : null}
 
         {shoot && studio && day ? (
-          <section className="fade-in pb-8">
+          <section id="book-request" className={cn("fade-in pb-8", STEP_CLASS)}>
             <Step n="05" title="Request" />
             <p className="mt-6 max-w-xl text-body text-muted">
               {shoot.name}, {packagePriceLabel(shoot)}. {studio.name}, {studio.city}
