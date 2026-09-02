@@ -70,7 +70,7 @@ async function fileViaApi(
     {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ title, body: markdown }),
+      body: JSON.stringify({ title, body: markdown, assignees: ["jjhbarrett"] }),
     },
   );
   const filePath = `requests/${id}.md`;

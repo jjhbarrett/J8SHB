@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { submitContact } from "@/lib/request";
-import { sendPublicInboxMail } from "@/lib/form-mail";
+import { sendStudioMail } from "@/lib/form-mail";
 import { SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -41,32 +41,36 @@ function ContactPage() {
     }
 
     setPending(true);
+    const fields: Record<string, string> = { Name: name.trim() };
+    if (email.trim()) fields.Email = email.trim();
+    if (instagram.trim()) fields.Instagram = instagram.trim();
+    fields.Message = message.trim();
     try {
-      await submitContact({
-        data: {
-          name: name.trim(),
-          email: email.trim() || undefined,
-          instagram: instagram.trim() || undefined,
-          message: message.trim(),
-          company: company.trim() || undefined,
-        },
-      });
-      setSent(true);
-    } catch {
-      try {
-        const fields: Record<string, string> = { Name: name.trim() };
-        if (email.trim()) fields.Email = email.trim();
-        if (instagram.trim()) fields.Instagram = instagram.trim();
-        fields.Message = message.trim();
-        await sendPublicInboxMail({
+      const [server, mailed] = await Promise.all([
+        submitContact({
+          data: {
+            name: name.trim(),
+            email: email.trim() || undefined,
+            instagram: instagram.trim() || undefined,
+            message: message.trim(),
+            company: company.trim() || undefined,
+          },
+        })
+          .then(() => true)
+          .catch(() => false),
+        sendStudioMail({
           subject: `J8 STUDIOS — Message from ${name.trim()}`,
           replyTo: email.includes("@") ? email.trim() : undefined,
           fields,
-        });
-        setSent(true);
-      } catch {
+        })
+          .then(() => true)
+          .catch(() => false),
+      ]);
+      if (!server && !mailed) {
         setError("Could not send. Email or Instagram is below.");
+        return;
       }
+      setSent(true);
     } finally {
       setPending(false);
     }

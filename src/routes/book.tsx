@@ -5,7 +5,7 @@ import { StudioCards } from "@/components/studio-cards";
 import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { packageMediaKey } from "@/lib/media-slots";
 import { submitShootRequest } from "@/lib/request";
-import { sendPublicInboxMail } from "@/lib/form-mail";
+import { sendStudioMail } from "@/lib/form-mail";
 import {
   formatDayKind,
   formatMonth,
@@ -170,58 +170,53 @@ function BookPage() {
     if (!shoot || !studio || !day || !month) return;
     setError(null);
     setPending(true);
+    const handle = instagram.trim().replace(/^@/, "");
+    const referenceGuess = makeReference();
+    const mail = {
+      subject: `J8 STUDIOS — ${shoot.name} request · ${referenceGuess}`,
+      fields: {
+        Reference: referenceGuess,
+        Name: name.trim(),
+        Instagram: `@${handle}`,
+        Shoot: `${shoot.name} · ${packagePriceLabel(shoot)}`,
+        Studio: `${studio.name}, ${studio.city}`,
+        When: `${formatDayKind(day)} · ${formatMonth(month)}`,
+        Note: note.trim() || "—",
+      },
+    };
+    const payload = {
+      packageId: shoot.id,
+      studioId: studio.id,
+      day,
+      month,
+      name: name.trim(),
+      instagram: instagram.trim(),
+      note: note.trim() || undefined,
+      company: company.trim() || undefined,
+    };
     try {
-      const result = await submitShootRequest({
-        data: {
-          packageId: shoot.id,
-          studioId: studio.id,
-          day,
-          month,
-          name: name.trim(),
-          instagram: instagram.trim(),
-          note: note.trim() || undefined,
-          company: company.trim() || undefined,
-        },
-      });
+      const [server, mailed] = await Promise.all([
+        submitShootRequest({ data: payload })
+          .then((result) => result)
+          .catch(() => null),
+        sendStudioMail(mail)
+          .then(() => true)
+          .catch(() => false),
+      ]);
+      if (!server && !mailed) {
+        setError("Could not send the request. Try again, or write via Contact.");
+        return;
+      }
       setDone({
-        reference: result.reference,
+        reference: server?.reference ?? referenceGuess,
         packageId: shoot.id,
         studioId: studio.id,
         day,
         month,
         name: name.trim(),
-        instagram: instagram.trim().replace(/^@/, ""),
+        instagram: handle,
         note: note.trim() || undefined,
       });
-    } catch {
-      try {
-        const reference = makeReference();
-        const handle = instagram.trim().replace(/^@/, "");
-        await sendPublicInboxMail({
-          subject: `J8 STUDIOS — ${shoot.name} request · ${reference}`,
-          fields: {
-            Reference: reference,
-            Name: name.trim(),
-            Instagram: `@${handle}`,
-            Shoot: `${shoot.name} · ${packagePriceLabel(shoot)}`,
-            Studio: `${studio.name}, ${studio.city}`,
-            When: `${formatDayKind(day)} · ${formatMonth(month)}`,
-            Note: note.trim() || "—",
-          },
-        });
-        setDone({
-          reference,
-          packageId: shoot.id,
-          studioId: studio.id,
-          day,
-          month,
-          name: name.trim(),
-          instagram: handle,
-          note: note.trim() || undefined,
-        });
-      } catch {
-        setError("Could not send the request. Try again, or write via Contact.");
-      }
     } finally {
       setPending(false);
     }
