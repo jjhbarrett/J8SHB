@@ -47,17 +47,23 @@ export async function compressImage(
 ): Promise<CompressedImage> {
   const bitmap = await createImageBitmap(file);
   const scale = Math.min(1, maxWidth / bitmap.width);
-  const width = Math.max(1, Math.round(bitmap.width * scale));
-  const height = Math.max(1, Math.round(bitmap.height * scale));
+  let width = Math.max(1, Math.round(bitmap.width * scale));
+  let height = Math.max(1, Math.round(bitmap.height * scale));
 
-  let quality = 0.72;
+  let quality = 0.7;
   let blob = await encode(bitmap, width, height, quality);
-  if (blob.size > 700_000) {
-    quality = 0.58;
+  if (blob.size > 480_000) {
+    quality = 0.55;
     blob = await encode(bitmap, width, height, quality);
   }
-  if (blob.size > 700_000) {
-    quality = 0.45;
+  if (blob.size > 480_000) {
+    quality = 0.42;
+    width = Math.max(1, Math.round(width * 0.85));
+    height = Math.max(1, Math.round(height * 0.85));
+    blob = await encode(bitmap, width, height, quality);
+  }
+  if (blob.size > 480_000) {
+    quality = 0.32;
     blob = await encode(bitmap, width, height, quality);
   }
   bitmap.close();

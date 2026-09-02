@@ -40,6 +40,7 @@ export function MediaProvider({ children }: { children: ReactNode }) {
   const srcFor = useCallback(
     (key: string, fallback?: string) => {
       const row = versions[key];
+      if (row?.url) return row.url;
       if (row) return mediaUrl(key, row.updatedAt);
       return fallback ?? MEDIA_FALLBACKS[key];
     },

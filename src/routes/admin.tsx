@@ -23,6 +23,16 @@ import {
 } from "@/lib/venues";
 import { cn } from "@/lib/utils";
 
+let uploadChain: Promise<void> = Promise.resolve();
+function queueUpload<T>(fn: () => Promise<T>): Promise<T> {
+  const run = uploadChain.then(fn, fn);
+  uploadChain = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
   head: () => ({
@@ -310,14 +320,16 @@ function AddPhotoCard({
     try {
       const key = nextStudioGalleryKey(venueId, existingKeys);
       const compressed = await compressImage(file, 1000);
-      const saved = await saveMedia({
-        data: {
-          key,
-          mime: "image/jpeg",
-          body: compressed.base64,
-          bytes: compressed.bytes,
-        },
-      });
+      const saved = await queueUpload(() =>
+        saveMedia({
+          data: {
+            key,
+            mime: "image/jpeg",
+            body: compressed.base64,
+            bytes: compressed.bytes,
+          },
+        }),
+      );
       patch(saved);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not add that still.");
@@ -385,14 +397,16 @@ function SlotCard({
     try {
       const compressed = await compressImage(file, slot.maxWidth);
       setBusy("save");
-      const saved = await saveMedia({
-        data: {
-          key: slot.key,
-          mime: "image/jpeg",
-          body: compressed.base64,
-          bytes: compressed.bytes,
-        },
-      });
+      const saved = await queueUpload(() =>
+        saveMedia({
+          data: {
+            key: slot.key,
+            mime: "image/jpeg",
+            body: compressed.base64,
+            bytes: compressed.bytes,
+          },
+        }),
+      );
       patch(saved);
       setNote(
         `${formatBytes(compressed.originalBytes)} → ${formatBytes(compressed.bytes)} · ${compressed.width}×${compressed.height}`,

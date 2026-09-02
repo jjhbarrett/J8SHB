@@ -2,31 +2,43 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { adminMiddleware } from "@/lib/admin-middleware";
 import { getSql } from "@/lib/db";
-import { isMediaKey } from "@/lib/media-slots";
+import { isMediaKey, mediaUrl } from "@/lib/media-slots";
 
 export type MediaVersion = {
   key: string;
   bytes: number;
   updatedAt: string;
+  url?: string;
 };
 
 export const listMedia = createServerFn({ method: "GET" }).handler(async () => {
-  const sql = await getSql();
-  const rows = await sql<{
-    key: string;
-    bytes: number;
-    updated_at: string;
-  }>`select key, bytes, updated_at from media`;
-  const out: MediaVersion[] = [];
-  for (const row of rows) {
-    if (!isMediaKey(row.key)) continue;
-    out.push({
-      key: row.key,
-      bytes: row.bytes,
-      updatedAt: String(row.updated_at),
-    });
+  const { listPersistedMedia } = await import("@/lib/media-github.server");
+  const persisted = await listPersistedMedia();
+  const byKey = new Map<string, MediaVersion>();
+  for (const row of persisted) byKey.set(row.key, row);
+  try {
+    const sql = await getSql();
+    const rows = await sql<{
+      key: string;
+      bytes: number;
+      updated_at: string;
+      body: string;
+    }>`select key, bytes, updated_at, body from media`;
+    for (const row of rows) {
+      if (!isMediaKey(row.key)) continue;
+      if (byKey.has(row.key)) continue;
+      if (!row.body || row.body.length < 80) continue;
+      byKey.set(row.key, {
+        key: row.key,
+        bytes: row.bytes,
+        updatedAt: String(row.updated_at),
+        url: mediaUrl(row.key, row.updated_at),
+      });
+    }
+  } catch {
+    /* github index is enough */
   }
-  return out;
+  return [...byKey.values()];
 });
 
 const mediaKeySchema = z.string().min(4).max(64).refine(isMediaKey, {
@@ -44,31 +56,21 @@ export const saveMedia = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const sql = await getSql();
-    await sql`
-      insert into media (key, mime, body, bytes, updated_at)
-      values (${data.key}, ${data.mime}, ${data.body}, ${data.bytes}, now())
-      on conflict (key) do update set
-        mime = excluded.mime,
-        body = excluded.body,
-        bytes = excluded.bytes,
-        updated_at = now()
-    `;
-    const rows = await sql<{ updated_at: string }>`
-      select updated_at from media where key = ${data.key}
-    `;
-    return {
-      key: data.key,
-      bytes: data.bytes,
-      updatedAt: rows[0]?.updated_at ?? new Date().toISOString(),
-    } satisfies MediaVersion;
+    const { persistMediaJpeg } = await import("@/lib/media-github.server");
+    return persistMediaJpeg(data.key, data.body, data.bytes);
   });
 
 export const clearMedia = createServerFn({ method: "POST" })
   .middleware([adminMiddleware])
   .validator(z.object({ key: mediaKeySchema }))
   .handler(async ({ data }) => {
-    const sql = await getSql();
-    await sql`delete from media where key = ${data.key}`;
+    const { removePersistedMedia } = await import("@/lib/media-github.server");
+    await removePersistedMedia(data.key);
+    try {
+      const sql = await getSql();
+      await sql`delete from media where key = ${data.key}`;
+    } catch {
+      /* github is source of truth */
+    }
     return { ok: true as const, key: data.key };
   });
