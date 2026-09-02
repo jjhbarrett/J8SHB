@@ -1,0 +1,33 @@
+name: Open request
+on:
+  push:
+    branches: [main]
+    paths:
+      - "requests/**"
+permissions:
+  issues: write
+  contents: read
+jobs:
+  open:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Create issue from new request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            FILES=$(ls requests/*.md 2>/dev/null || true)
+          else
+            FILES=$(git diff --name-only --diff-filter=A "$BEFORE" HEAD -- requests/ || true)
+          fi
+          for FILE in $FILES; do
+            [ -f "$FILE" ] || continue
+            TITLE=$(head -n 1 "$FILE" | sed 's/^# //')
+            [ -n "$TITLE" ] || TITLE="Studio request"
+            gh issue create --title "$TITLE" --body-file "$FILE"
+          done
