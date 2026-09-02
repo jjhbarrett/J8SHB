@@ -15,7 +15,7 @@ import {
   studioMediaKey,
   type MediaSlot,
 } from "@/lib/media-slots";
-import { SEED_VENUE_IDS, SITE, VENUES, type Venue } from "@/lib/site";
+import { SEED_VENUE_IDS, VENUES, type Venue } from "@/lib/site";
 import {
   createVenue,
   deleteVenue,
@@ -71,8 +71,8 @@ function AdminPage() {
           <p className="text-sm font-medium text-muted">Admin</p>
           <h1 className="mt-4 text-display text-fg">Studio</h1>
           <p className="mt-4 max-w-xl text-body text-muted">
-            Requests land here and in {SITE.email}. Photos below replace the
-            frames on the site.
+            Requests land here, and a note is emailed to you. Photos below
+            replace the frames on the site.
           </p>
         </div>
         <button
@@ -378,7 +378,7 @@ function RequestsPanel() {
     <section className="mt-14">
       <h2 className="text-sm font-medium text-muted">Requests</h2>
       <p className="mt-3 max-w-xl text-body text-muted">
-        Each Book and Contact note is emailed to {SITE.email}. A copy stays here.
+        Each Book and Contact note is emailed to you. A copy stays here.
       </p>
       {rows === null ? (
         <div className="mt-6 h-16 rounded-lg bg-surface" />

@@ -3,7 +3,7 @@ export const SITE = {
   city: "Winchester",
   line: "Editorial fitness photography. Winchester.",
   positioning: "Editorial fitness photography. Studio, physique, boudoir.",
-  email: "studio@j8studios.com",
+  email: "j8shb@icloud.com",
   instagramHandle: "j8studios",
   instagramUrl: "https://instagram.com/j8studios",
   hold: 50,

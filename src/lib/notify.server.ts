@@ -7,7 +7,7 @@ export type EnquiryMail = {
 };
 
 function inboxAddress(): string {
-  return (process.env.REQUEST_EMAIL ?? SITE.email).trim();
+  return (process.env.REQUEST_EMAIL ?? "josh@genverse.co.uk").trim();
 }
 
 function asText(fields: Record<string, string>): string {
