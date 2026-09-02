@@ -5,10 +5,12 @@ import { StudioCards } from "@/components/studio-cards";
 import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { packageMediaKey } from "@/lib/media-slots";
 import { submitShootRequest } from "@/lib/request";
+import { sendPublicInboxMail } from "@/lib/form-mail";
 import {
   formatDayKind,
   formatMonth,
   formatPrice,
+  makeReference,
   nextSixMonths,
   PACKAGES,
   packageById,
@@ -192,7 +194,34 @@ function BookPage() {
         note: note.trim() || undefined,
       });
     } catch {
-      setError("Could not send the request. Try again, or write via Contact.");
+      try {
+        const reference = makeReference();
+        const handle = instagram.trim().replace(/^@/, "");
+        await sendPublicInboxMail({
+          subject: `J8 STUDIOS — ${shoot.name} request · ${reference}`,
+          fields: {
+            Reference: reference,
+            Name: name.trim(),
+            Instagram: `@${handle}`,
+            Shoot: `${shoot.name} · ${packagePriceLabel(shoot)}`,
+            Studio: `${studio.name}, ${studio.city}`,
+            When: `${formatDayKind(day)} · ${formatMonth(month)}`,
+            Note: note.trim() || "—",
+          },
+        });
+        setDone({
+          reference,
+          packageId: shoot.id,
+          studioId: studio.id,
+          day,
+          month,
+          name: name.trim(),
+          instagram: handle,
+          note: note.trim() || undefined,
+        });
+      } catch {
+        setError("Could not send the request. Try again, or write via Contact.");
+      }
     } finally {
       setPending(false);
     }

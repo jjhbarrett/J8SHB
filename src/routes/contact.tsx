@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { submitContact } from "@/lib/request";
+import { sendPublicInboxMail } from "@/lib/form-mail";
 import { SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +53,20 @@ function ContactPage() {
       });
       setSent(true);
     } catch {
-      setError("Could not send. Email or Instagram is below.");
+      try {
+        const fields: Record<string, string> = { Name: name.trim() };
+        if (email.trim()) fields.Email = email.trim();
+        if (instagram.trim()) fields.Instagram = instagram.trim();
+        fields.Message = message.trim();
+        await sendPublicInboxMail({
+          subject: `J8 STUDIOS — Message from ${name.trim()}`,
+          replyTo: email.includes("@") ? email.trim() : undefined,
+          fields,
+        });
+        setSent(true);
+      } catch {
+        setError("Could not send. Email or Instagram is below.");
+      }
     } finally {
       setPending(false);
     }

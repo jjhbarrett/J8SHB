@@ -25,9 +25,15 @@ const shootRequestSchema = z.object({
     .string()
     .trim()
     .min(1)
-    .max(40)
-    .transform((value) => value.replace(/^@/, "")),
-  note: z.string().trim().max(120).optional(),
+    .max(80)
+    .transform((value) =>
+      value
+        .replace(/^@/, "")
+        .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+        .split("/")[0]
+        .replace(/^@/, ""),
+    ),
+  note: z.string().trim().max(400).optional(),
   company: z.string().max(80).optional(),
 });
 
@@ -35,7 +41,7 @@ const contactSchema = z
   .object({
     name: z.string().trim().min(1).max(80),
     email: z.string().trim().max(120).optional(),
-    instagram: z.string().trim().max(40).optional(),
+    instagram: z.string().trim().max(80).optional(),
     message: z.string().trim().min(1).max(2000),
     company: z.string().max(80).optional(),
   })
