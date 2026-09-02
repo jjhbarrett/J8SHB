@@ -53,7 +53,7 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   },
   {
     key: "package-signature",
-    label: "Signature Private Shoot",
+    label: "1–1 Private",
     group: "Shoots",
     maxWidth: 1400,
   },
@@ -65,7 +65,7 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   },
   {
     key: "package-group",
-    label: "Group Shoots",
+    label: "Group Shoot",
     group: "Shoots",
     maxWidth: 1400,
   },

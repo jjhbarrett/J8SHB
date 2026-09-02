@@ -10,7 +10,7 @@ const shootRequestSchema = z.object({
     .min(2)
     .max(40)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-  day: z.enum(["weekday", "weekend"]),
+  day: z.enum(["weekday", "weekend", "exclusive"]),
   month: z.string().regex(/^\d{4}-\d{2}$/),
   name: z.string().trim().min(1).max(80),
   instagram: z

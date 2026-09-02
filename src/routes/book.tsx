@@ -6,6 +6,7 @@ import { btnPrimary, fieldClass } from "@/lib/chrome";
 import { packageMediaKey } from "@/lib/media-slots";
 import { submitShootRequest } from "@/lib/request";
 import {
+  formatDayKind,
   formatMonth,
   formatPrice,
   nextSixMonths,
@@ -13,6 +14,7 @@ import {
   packageById,
   packagePriceLabel,
   SITE,
+  travelExcessLabel,
   VENUES,
   venueById,
   type DayKind,
@@ -48,7 +50,9 @@ function BookPage() {
   const initialPackage = packageById(search.package)?.id ?? null;
   const [packageId, setPackageId] = useState<PackageId | null>(initialPackage);
   const [studioId, setStudioId] = useState<string | null>(search.studio ?? null);
-  const [day, setDay] = useState<DayKind | null>(null);
+  const [day, setDay] = useState<DayKind | null>(
+    packageById(initialPackage)?.exclusiveDates ? "exclusive" : null,
+  );
   const [month, setMonth] = useState(months[0]?.value ?? "");
   const [name, setName] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -72,7 +76,13 @@ function BookPage() {
 
   useEffect(() => {
     const next = packageById(search.package)?.id ?? null;
-    if (next) setPackageId(next);
+    if (next) {
+      setPackageId(next);
+      setDay((prev) => {
+        if (packageById(next)?.exclusiveDates) return "exclusive";
+        return prev === "exclusive" ? null : prev;
+      });
+    }
   }, [search.package]);
 
   useEffect(() => {
@@ -87,6 +97,10 @@ function BookPage() {
 
   function selectPackage(id: PackageId) {
     setPackageId(id);
+    setDay((prev) => {
+      if (packageById(id)?.exclusiveDates) return "exclusive";
+      return prev === "exclusive" ? null : prev;
+    });
     void navigate({
       search: (prev) => ({ ...prev, package: id }),
       replace: true,
@@ -159,12 +173,16 @@ function BookPage() {
           <Row
             label="Studio"
             value={
-              booked ? `${booked.name} · ${booked.city}` : done.studioId
+              booked
+                ? `${booked.name} · ${booked.city}${
+                    travelExcessLabel(booked) ? ` · ${travelExcessLabel(booked)}` : ""
+                  }`
+                : done.studioId
             }
           />
           <Row
             label="When"
-            value={`${done.day === "weekend" ? "Weekend" : "Weekday"} · ${formatMonth(done.month)}`}
+            value={`${formatDayKind(done.day)} · ${formatMonth(done.month)}`}
           />
           <Row label="Name" value={done.name} />
           <Row label="Instagram" value={`@${done.instagram}`} />
@@ -218,43 +236,66 @@ function BookPage() {
         {shoot && studio ? (
           <section className="fade-in">
             <Step n="03" title="When" />
-            <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-12">
-              <fieldset>
-                <legend className="text-sm text-muted">Day</legend>
-                <div className="mt-3 flex gap-3">
-                  {(["weekday", "weekend"] as const).map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => setDay(option)}
-                      aria-pressed={day === option}
-                      className={cn(
-                        "min-h-11 min-w-28 rounded-full px-4 text-sm font-medium capitalize transition-colors duration-200",
-                        day === option
-                          ? "bg-fg text-bg"
-                          : "text-fg ring-1 ring-line hover:ring-fg/45",
-                      )}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-              <label className="block min-w-56">
-                <span className="text-sm text-muted">Month</span>
-                <select
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  className={cn(fieldClass, "appearance-none")}
-                >
-                  {months.map((item) => (
-                    <option key={item.value} value={item.value} className="bg-bg text-fg">
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
+            {shoot.exclusiveDates ? (
+              <div className="mt-8 max-w-xl">
+                <p className="text-body text-muted">
+                  Exclusive dates only. Josh publishes the next studio days.
+                  Tell us the month you can do.
+                </p>
+                <label className="mt-8 block min-w-56">
+                  <span className="text-sm text-muted">Month</span>
+                  <select
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    className={cn(fieldClass, "appearance-none")}
+                  >
+                    {months.map((item) => (
+                      <option key={item.value} value={item.value} className="bg-bg text-fg">
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            ) : (
+              <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-12">
+                <fieldset>
+                  <legend className="text-sm text-muted">Day</legend>
+                  <div className="mt-3 flex gap-3">
+                    {(["weekday", "weekend"] as const).map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setDay(option)}
+                        aria-pressed={day === option}
+                        className={cn(
+                          "min-h-11 min-w-28 rounded-full px-4 text-sm font-medium capitalize transition-colors duration-200",
+                          day === option
+                            ? "bg-fg text-bg"
+                            : "text-fg ring-1 ring-line hover:ring-fg/45",
+                        )}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <label className="block min-w-56">
+                  <span className="text-sm text-muted">Month</span>
+                  <select
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    className={cn(fieldClass, "appearance-none")}
+                  >
+                    {months.map((item) => (
+                      <option key={item.value} value={item.value} className="bg-bg text-fg">
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            )}
           </section>
         ) : null}
 
@@ -301,8 +342,9 @@ function BookPage() {
           <section className="fade-in pb-8">
             <Step n="05" title="Request" />
             <p className="mt-6 max-w-xl text-body text-muted">
-              {shoot.name}, {packagePriceLabel(shoot)}. {studio.name}, {studio.city}.{" "}
-              {day === "weekend" ? "Weekend" : "Weekday"} {formatMonth(month)}.
+              {shoot.name}, {packagePriceLabel(shoot)}. {studio.name}, {studio.city}
+              {travelExcessLabel(studio) ? `. ${travelExcessLabel(studio)}` : ""}.{" "}
+              {formatDayKind(day)} {formatMonth(month)}.
             </p>
             {error ? <p className="mt-4 text-body text-muted">{error}</p> : null}
             <button
@@ -346,7 +388,11 @@ function PackageChoice({
         <h3 className="text-xl font-normal tracking-display text-fg">{item.name}</h3>
         <p className="text-sm font-medium text-fg">{packagePriceLabel(item)}</p>
       </div>
-      <p className="mt-2 text-sm text-muted">{item.hours}</p>
+      <p className="mt-2 text-sm text-muted">
+        {item.exclusiveDates
+          ? `Exclusive dates only · ${item.hours}`
+          : item.hours}
+      </p>
     </button>
   );
 }

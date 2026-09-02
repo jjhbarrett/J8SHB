@@ -11,6 +11,7 @@ import {
 import {
   PACKAGES,
   packagePriceLabel,
+  travelExcessLabel,
   VENUES,
   type ShootPackage,
   type Venue,
@@ -37,8 +38,8 @@ function PricingPage() {
       <p className="text-sm font-medium text-muted">Pricing</p>
       <h1 className="mt-4 text-display text-fg">The shoot</h1>
       <p className="mt-4 max-w-xl text-body text-muted">
-        Room included. You don’t pay the studio on top. Request a date — this is
-        not a payment.
+        Room included. You don’t pay the studio on top. Studio days are exclusive
+        dates Josh sets. Request a date — this is not a payment.
       </p>
 
       <ul className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-10">
@@ -105,6 +106,9 @@ function VenueCard({ venue }: { venue: Venue }) {
       {venue.note ? (
         <p className="mt-2 text-body text-muted">{venue.note}</p>
       ) : null}
+      {travelExcessLabel(venue) ? (
+        <p className="mt-2 text-sm text-fg">{travelExcessLabel(venue)}</p>
+      ) : null}
       {extras.length ? (
         <ul className="mt-4 grid grid-cols-3 gap-2">
           {extras.map((key) => (
@@ -145,6 +149,9 @@ function PackageCard({ item }: { item: ShootPackage }) {
         </h2>
         <p className="text-lg font-medium text-fg">{packagePriceLabel(item)}</p>
       </div>
+      {item.exclusiveDates ? (
+        <p className="mt-3 text-sm font-medium text-fg">Exclusive dates only</p>
+      ) : null}
       {item.blurb ? (
         <p className="mt-3 max-w-md text-body text-muted">{item.blurb}</p>
       ) : null}

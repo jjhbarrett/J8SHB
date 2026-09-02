@@ -23,8 +23,10 @@ export type ShootPackage = {
   blurb?: string;
   price: number | null;
   each?: number;
+  minPeople?: number;
   hours: string;
   includes: string[];
+  exclusiveDates?: boolean;
 };
 
 export const PACKAGES: ShootPackage[] = [
@@ -32,9 +34,10 @@ export const PACKAGES: ShootPackage[] = [
     id: "studio-days",
     name: "Studio Days",
     blurb:
-      "Your own private 1.5 hour slot. Reduced rate — Josh is in the studio all day.",
-    price: 250,
+      "A private 1.5 hour slot on a day Josh is already in the studio.",
+    price: 199,
     hours: "1.5 hours",
+    exclusiveDates: true,
     includes: [
       "10 edited images, chosen by you",
       "Studio cost included",
@@ -42,33 +45,38 @@ export const PACKAGES: ShootPackage[] = [
   },
   {
     id: "signature",
-    name: "Signature Private Shoot",
-    price: 350,
+    name: "1–1 Private",
+    blurb: "Your date. The room is yours.",
+    price: 299,
     hours: "2 hours",
     includes: [
       "15 edited images, chosen by you",
       "Studio cost included",
-      "BTS footage included",
     ],
   },
   {
     id: "duo",
     name: "Duo Shoot",
-    price: 450,
-    each: 250,
-    hours: "3 hours",
+    price: 390,
+    each: 195,
+    hours: "2.5 hours",
     includes: [
-      "10 edited images each, chosen by you",
+      "15 edited images each, chosen by you",
       "Studio cost included",
-      "BTS footage included",
     ],
   },
   {
     id: "group",
-    name: "Group Shoots",
+    name: "Group Shoot",
     price: null,
-    hours: "4–6 hours",
-    includes: ["Custom pricing"],
+    each: 140,
+    minPeople: 3,
+    hours: "From 3 hours",
+    includes: [
+      "Min. 3 people",
+      "10 edited images each, chosen by you",
+      "Studio cost included",
+    ],
   },
 ];
 
@@ -81,6 +89,7 @@ export type Venue = {
   note: string;
   recommended: boolean;
   image?: string;
+  travelExcess?: number;
 };
 
 export const VENUE_IMAGES: Record<string, string> = {
@@ -97,6 +106,7 @@ export const VENUES: Venue[] = [
     note: "The room people wait for.",
     recommended: true,
     image: VENUE_IMAGES.northampton,
+    travelExcess: 90,
   },
   {
     id: "london",
@@ -144,9 +154,25 @@ export function formatPrice(gbp: number): string {
 }
 
 export function packagePriceLabel(item: ShootPackage): string {
+  if (item.each) {
+    return item.minPeople
+      ? `${formatPrice(item.each)} each · min. ${item.minPeople}`
+      : `${formatPrice(item.each)} each`;
+  }
   if (item.price == null) return "Custom";
-  if (item.each) return `${formatPrice(item.price)} · ${formatPrice(item.each)} each`;
   return formatPrice(item.price);
+}
+
+export type DayKind = "weekday" | "weekend" | "exclusive";
+
+export function formatDayKind(day: DayKind): string {
+  if (day === "exclusive") return "Exclusive date";
+  return day === "weekend" ? "Weekend" : "Weekday";
+}
+
+export function travelExcessLabel(venue: Venue): string | null {
+  if (!venue.travelExcess) return null;
+  return `Travel excess ${formatPrice(venue.travelExcess)}`;
 }
 
 export type WorkStill = {
@@ -232,8 +258,6 @@ export const WORK: WorkStill[] = [
 ];
 
 export const HOME_WORK = WORK.slice(0, 9);
-
-export type DayKind = "weekday" | "weekend";
 
 export function nextSixMonths(from = new Date()): { value: string; label: string }[] {
   const months: { value: string; label: string }[] = [];

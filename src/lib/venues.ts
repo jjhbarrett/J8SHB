@@ -20,13 +20,15 @@ type VenueRow = {
 };
 
 function toVenue(row: VenueRow): Venue {
+  const seed = VENUES.find((item) => item.id === row.id);
   return {
     id: row.id,
     city: row.city,
     name: row.name,
     note: row.note ?? "",
     recommended: Boolean(row.recommended),
-    image: VENUE_IMAGES[row.id],
+    image: VENUE_IMAGES[row.id] ?? seed?.image,
+    travelExcess: seed?.travelExcess,
   };
 }
 

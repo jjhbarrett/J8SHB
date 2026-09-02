@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { studioMediaKey } from "@/lib/media-slots";
-import { type Venue } from "@/lib/site";
+import { travelExcessLabel, type Venue } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { PhotoFrame } from "./photo-frame";
 
@@ -47,6 +47,9 @@ export function StudioCards({
             </h3>
             {studio.note ? (
               <p className="mt-2 text-body text-muted">{studio.note}</p>
+            ) : null}
+            {travelExcessLabel(studio) ? (
+              <p className="mt-2 text-sm text-fg">{travelExcessLabel(studio)}</p>
             ) : null}
           </>
         );
