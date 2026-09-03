@@ -2,7 +2,7 @@ export const SITE = {
   name: "J8 STUDIOS",
   city: "Winchester",
   line: "Editorial fitness photography. Winchester.",
-  positioning: "Editorial fitness photography. Studio, physique, boudoir.",
+  positioning: "Editorial fitness photography. Studio, physique, confidence.",
   email: "j8shb@icloud.com",
   instagramHandle: "j8shb",
   instagramUrl: "https://instagram.com/j8shb",
@@ -222,7 +222,7 @@ export type WorkStill = {
   id: string;
   src: string;
   alt: string;
-  kind: "physique" | "dance" | "boudoir" | "portrait";
+  kind: "physique" | "dance" | "confidence" | "portrait";
 };
 
 export const WORK: WorkStill[] = [
@@ -265,8 +265,8 @@ export const WORK: WorkStill[] = [
   {
     id: "07",
     src: "/media/work-07.jpg",
-    alt: "Studio boudoir, silk robe",
-    kind: "boudoir",
+    alt: "Studio confidence portrait, silk robe",
+    kind: "confidence",
   },
   {
     id: "08",

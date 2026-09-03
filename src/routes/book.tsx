@@ -473,7 +473,7 @@ function BookPage() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   className={fieldClass}
-                  placeholder="fitness / boudoir / dance"
+                  placeholder="fitness / confidence / dance"
                   maxLength={120}
                 />
               </label>

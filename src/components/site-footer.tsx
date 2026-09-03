@@ -11,7 +11,7 @@ export function SiteFooter() {
           </p>
           <p className="max-w-xs text-body text-muted">{SITE.line}</p>
           <p className="max-w-xs text-body text-muted">
-            Physique, studio and boudoir shoots.
+            Physique, studio and confidence shoots.
           </p>
         </div>
         <div className="flex flex-col gap-3 text-sm text-muted">
