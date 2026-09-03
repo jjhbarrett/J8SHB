@@ -88,7 +88,9 @@ export type StudioDay = {
  * Past days drop off the book page on their own.
  * venueId: northampton | london | hampshire
  */
-export const STUDIO_DAYS: StudioDay[] = [];
+export const STUDIO_DAYS: StudioDay[] = [
+  { date: "2026-09-17", venueId: "northampton" },
+];
 
 export function studioDayId(day: StudioDay): string {
   return `${day.date}-${day.venueId}`;
