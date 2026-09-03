@@ -1,12 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import {
-  formatDayKind,
-  formatMonth,
+  formatRequestWhen,
   makeReference,
   PACKAGE_IDS,
   packageById,
   packagePriceLabel,
+  upcomingStudioDays,
   venueById,
 } from "./site";
 
@@ -20,6 +20,10 @@ const shootRequestSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   day: z.enum(["weekday", "weekend", "exclusive"]),
   month: z.string().regex(/^\d{4}-\d{2}$/),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
   name: z.string().trim().min(1).max(80),
   instagram: z
     .string()
@@ -35,6 +39,19 @@ const shootRequestSchema = z.object({
     ),
   note: z.string().trim().max(400).optional(),
   company: z.string().max(80).optional(),
+}).superRefine((data, ctx) => {
+  const shoot = packageById(data.packageId);
+  if (!shoot?.exclusiveDates) return;
+  const listed = upcomingStudioDays().some(
+    (day) => day.date === data.date && day.venueId === data.studioId,
+  );
+  if (!listed) {
+    ctx.addIssue({
+      code: "custom",
+      message: "That studio day isn’t listed.",
+      path: ["date"],
+    });
+  }
 });
 
 const contactSchema = z
@@ -72,7 +89,11 @@ export const submitShootRequest = createServerFn({ method: "POST" })
         ? `${shoot.name} · ${packagePriceLabel(shoot)}`
         : data.packageId,
       Studio: venue ? `${venue.name}, ${venue.city}` : data.studioId,
-      When: `${formatDayKind(data.day)} · ${formatMonth(data.month)}`,
+      When: formatRequestWhen({
+        day: data.day,
+        month: data.month,
+        date: data.date,
+      }),
       Note: data.note?.trim() ? data.note.trim() : "—",
     };
     const subject = `${shoot?.name ?? "Shoot"} request · ${reference}`;

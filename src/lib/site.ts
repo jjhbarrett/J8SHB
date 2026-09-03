@@ -78,6 +78,49 @@ export const PACKAGES: ShootPackage[] = [
   },
 ];
 
+export type StudioDay = {
+  date: string;
+  venueId: string;
+};
+
+/**
+ * Days Josh is already in a room. Add `{ date: "YYYY-MM-DD", venueId }`.
+ * Past days drop off the book page on their own.
+ * venueId: northampton | london | hampshire
+ */
+export const STUDIO_DAYS: StudioDay[] = [];
+
+export function studioDayId(day: StudioDay): string {
+  return `${day.date}-${day.venueId}`;
+}
+
+export function londonToday(): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Europe/London" });
+}
+
+export function upcomingStudioDays(from = londonToday()): StudioDay[] {
+  return STUDIO_DAYS.filter((day) => day.date >= from).sort((a, b) =>
+    a.date === b.date ? a.venueId.localeCompare(b.venueId) : a.date.localeCompare(b.date),
+  );
+}
+
+export function studioDayById(id: string | undefined | null): StudioDay | undefined {
+  if (!id) return undefined;
+  return upcomingStudioDays().find((day) => studioDayId(day) === id);
+}
+
+export function formatLongDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  if (!year || !month || !day) return iso;
+  const d = new Date(Date.UTC(year, month - 1, day, 12));
+  return d.toLocaleString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  });
+}
+
 export const SEED_VENUE_IDS = ["northampton", "london", "hampshire"] as const;
 
 export type Venue = {
@@ -273,6 +316,15 @@ export function formatMonth(value: string): string {
   if (!year || !month) return value;
   const d = new Date(Number(year), Number(month) - 1, 1);
   return d.toLocaleString("en-GB", { month: "long", year: "numeric" });
+}
+
+export function formatRequestWhen(input: {
+  day: DayKind;
+  month: string;
+  date?: string;
+}): string {
+  if (input.date) return formatLongDate(input.date);
+  return `${formatDayKind(input.day)} · ${formatMonth(input.month)}`;
 }
 
 export function makeReference(): string {

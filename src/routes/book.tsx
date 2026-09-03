@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PhotoFrame } from "@/components/photo-frame";
 import { StudioCards } from "@/components/studio-cards";
 import { btnPrimary, fieldClass } from "@/lib/chrome";
@@ -7,8 +7,8 @@ import { packageMediaKey } from "@/lib/media-slots";
 import { submitShootRequest } from "@/lib/request";
 import { sendStudioMail } from "@/lib/form-mail";
 import {
-  formatDayKind,
-  formatMonth,
+  formatLongDate,
+  formatRequestWhen,
   formatPrice,
   makeReference,
   nextSixMonths,
@@ -17,11 +17,13 @@ import {
   packagePriceLabel,
   SITE,
   travelExcessLabel,
+  upcomingStudioDays,
   VENUES,
   venueById,
   type DayKind,
   type PackageId,
   type ShootPackage,
+  type StudioDay,
   type Venue,
 } from "@/lib/site";
 import { listVenues } from "@/lib/venues";
@@ -80,6 +82,7 @@ function BookPage() {
     packageById(initialPackage)?.exclusiveDates ? "exclusive" : null,
   );
   const [month, setMonth] = useState(months[0]?.value ?? "");
+  const [slotDate, setSlotDate] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [instagram, setInstagram] = useState("");
   const [note, setNote] = useState("");
@@ -92,6 +95,7 @@ function BookPage() {
     studioId: string;
     day: DayKind;
     month: string;
+    date?: string;
     name: string;
     instagram: string;
     note?: string;
@@ -110,6 +114,7 @@ function BookPage() {
         if (packageById(next)?.exclusiveDates) return "exclusive";
         return prev === "exclusive" ? null : prev;
       });
+      if (!packageById(next)?.exclusiveDates) setSlotDate(null);
     }
   }, [search.package]);
 
@@ -121,7 +126,8 @@ function BookPage() {
     if (landed.current) return;
     if (!packageById(search.package)) return;
     landed.current = true;
-    const id = search.studio ? "book-when" : "book-studio";
+    const exclusive = packageById(search.package)?.exclusiveDates;
+    const id = exclusive ? "book-when" : search.studio ? "book-when" : "book-studio";
     scrollToStep(id);
     const t = window.setTimeout(() => scrollToStep(id), 280);
     return () => window.clearTimeout(t);
@@ -129,21 +135,26 @@ function BookPage() {
 
   const shoot = packageById(packageId);
   const studio = venueById(studioId, venues);
+  const studioDays = useMemo(() => upcomingStudioDays(), []);
+  const exclusive = Boolean(shoot?.exclusiveDates);
+  const whenReady = exclusive ? Boolean(slotDate) : Boolean(day);
   const canRequest = Boolean(
-    shoot && studio && day && month && name.trim() && instagram.trim(),
+    shoot && studio && whenReady && month && name.trim() && instagram.trim(),
   );
 
   function selectPackage(id: PackageId) {
     setPackageId(id);
+    const nextExclusive = Boolean(packageById(id)?.exclusiveDates);
     setDay((prev) => {
-      if (packageById(id)?.exclusiveDates) return "exclusive";
+      if (nextExclusive) return "exclusive";
       return prev === "exclusive" ? null : prev;
     });
+    if (!nextExclusive) setSlotDate(null);
     void navigate({
       search: (prev) => ({ ...prev, package: id }),
       replace: true,
     });
-    scrollToStep(studioId ? "book-when" : "book-studio");
+    scrollToStep(nextExclusive || studioId ? "book-when" : "book-studio");
   }
 
   function selectStudio(id: string) {
@@ -153,6 +164,18 @@ function BookPage() {
       replace: true,
     });
     scrollToStep("book-when");
+  }
+
+  function selectStudioDay(slot: StudioDay) {
+    setSlotDate(slot.date);
+    setStudioId(slot.venueId);
+    setDay("exclusive");
+    setMonth(slot.date.slice(0, 7));
+    void navigate({
+      search: (prev) => ({ ...prev, studio: slot.venueId }),
+      replace: true,
+    });
+    scrollToStep("book-who");
   }
 
   function selectDay(option: DayKind) {
@@ -168,10 +191,16 @@ function BookPage() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     if (!shoot || !studio || !day || !month) return;
+    if (exclusive && !slotDate) return;
     setError(null);
     setPending(true);
     const handle = instagram.trim().replace(/^@/, "");
     const referenceGuess = makeReference();
+    const when = formatRequestWhen({
+      day,
+      month,
+      date: slotDate ?? undefined,
+    });
     const mail = {
       subject: `J8 STUDIOS — ${shoot.name} request · ${referenceGuess}`,
       fields: {
@@ -180,7 +209,7 @@ function BookPage() {
         Instagram: `@${handle}`,
         Shoot: `${shoot.name} · ${packagePriceLabel(shoot)}`,
         Studio: `${studio.name}, ${studio.city}`,
-        When: `${formatDayKind(day)} · ${formatMonth(month)}`,
+        When: when,
         Note: note.trim() || "—",
       },
     };
@@ -189,6 +218,7 @@ function BookPage() {
       studioId: studio.id,
       day,
       month,
+      date: slotDate ?? undefined,
       name: name.trim(),
       instagram: instagram.trim(),
       note: note.trim() || undefined,
@@ -213,6 +243,7 @@ function BookPage() {
         studioId: studio.id,
         day,
         month,
+        date: slotDate ?? undefined,
         name: name.trim(),
         instagram: handle,
         note: note.trim() || undefined,
@@ -255,7 +286,11 @@ function BookPage() {
           />
           <Row
             label="When"
-            value={`${formatDayKind(done.day)} · ${formatMonth(done.month)}`}
+            value={formatRequestWhen({
+              day: done.day,
+              month: done.month,
+              date: done.date,
+            })}
           />
           <Row label="Name" value={done.name} />
           <Row label="Instagram" value={`@${done.instagram}`} />
@@ -293,7 +328,7 @@ function BookPage() {
           </ul>
         </section>
 
-        {shoot ? (
+        {shoot && !exclusive ? (
           <section id="book-studio" className={cn("fade-in", STEP_CLASS)}>
             <Step n="02" title="Choose the studio" />
             <div className="mt-8">
@@ -306,29 +341,64 @@ function BookPage() {
           </section>
         ) : null}
 
-        {shoot && studio ? (
+        {shoot && (exclusive || studio) ? (
           <section id="book-when" className={cn("fade-in", STEP_CLASS)}>
-            <Step n="03" title="When" />
-            {shoot.exclusiveDates ? (
+            <Step n={exclusive ? "02" : "03"} title="When" />
+            {exclusive ? (
               <div className="mt-8 max-w-xl">
                 <p className="text-body text-muted">
-                  Exclusive dates only. Josh publishes the next studio days.
-                  Tell us the month you can do.
+                  Days Josh is already in the room. Pick one — the studio is on
+                  the date.
                 </p>
-                <label className="mt-8 block min-w-56">
-                  <span className="text-sm text-muted">Month</span>
-                  <select
-                    value={month}
-                    onChange={(e) => selectMonth(e.target.value)}
-                    className={cn(fieldClass, "appearance-none")}
-                  >
-                    {months.map((item) => (
-                      <option key={item.value} value={item.value} className="bg-bg text-fg">
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                {studioDays.length === 0 ? (
+                  <p className="mt-8 text-body text-fg">
+                    None posted yet.{" "}
+                    <Link
+                      to="/contact"
+                      className="underline decoration-line underline-offset-4 transition-opacity hover:opacity-70"
+                    >
+                      Write
+                    </Link>{" "}
+                    or request a 1–1 for your own date.
+                  </p>
+                ) : (
+                  <ul className="mt-8 space-y-3">
+                    {studioDays.map((slot) => {
+                      const room = venueById(slot.venueId, venues);
+                      const selected =
+                        slotDate === slot.date && studioId === slot.venueId;
+                      return (
+                        <li key={`${slot.date}-${slot.venueId}`}>
+                          <button
+                            type="button"
+                            onClick={() => selectStudioDay(slot)}
+                            aria-pressed={selected}
+                            className={cn(
+                              "flex w-full flex-col gap-1 rounded-lg px-5 py-4 text-left transition-colors duration-200",
+                              selected
+                                ? "bg-fg text-bg"
+                                : "text-fg ring-1 ring-line hover:ring-fg/45",
+                            )}
+                          >
+                            <span className="text-base font-medium">
+                              {formatLongDate(slot.date)}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-sm",
+                                selected ? "text-bg/80" : "text-muted",
+                              )}
+                            >
+                              {room
+                                ? `${room.name}, ${room.city}`
+                                : slot.venueId}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </div>
             ) : (
               <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-12">
@@ -372,9 +442,9 @@ function BookPage() {
           </section>
         ) : null}
 
-        {shoot && studio && day ? (
+        {shoot && studio && whenReady ? (
           <section id="book-who" className={cn("fade-in", STEP_CLASS)}>
-            <Step n="04" title="Who" />
+            <Step n={exclusive ? "03" : "04"} title="Who" />
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-6">
               <label className="block">
                 <span className="text-sm text-muted">Name</span>
@@ -420,13 +490,18 @@ function BookPage() {
           </section>
         ) : null}
 
-        {shoot && studio && day ? (
+        {shoot && studio && whenReady ? (
           <section id="book-request" className={cn("fade-in pb-8", STEP_CLASS)}>
-            <Step n="05" title="Request" />
+            <Step n={exclusive ? "04" : "05"} title="Request" />
             <p className="mt-6 max-w-xl text-body text-muted">
               {shoot.name}, {packagePriceLabel(shoot)}. {studio.name}, {studio.city}
               {travelExcessLabel(studio) ? `. ${travelExcessLabel(studio)}` : ""}.{" "}
-              {formatDayKind(day)} {formatMonth(month)}.
+              {formatRequestWhen({
+                day: day ?? "exclusive",
+                month,
+                date: slotDate ?? undefined,
+              })}
+              .
             </p>
             {error ? <p className="mt-4 text-body text-muted">{error}</p> : null}
             <button
@@ -472,7 +547,7 @@ function PackageChoice({
       </div>
       <p className="mt-2 text-sm text-muted">
         {item.exclusiveDates
-          ? `Exclusive dates only · ${item.hours}`
+          ? `Posted dates only · ${item.hours}`
           : item.hours}
       </p>
     </button>
