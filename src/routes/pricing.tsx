@@ -42,6 +42,9 @@ function PricingPage() {
         Room included. You don’t pay the studio on top. Studio days are days
         Josh is already in the room. Request a date — this is not a payment.
       </p>
+      <p className="mt-4 max-w-xl text-body text-fg">
+        Payments can be split in two.
+      </p>
 
       <ul className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-10">
         {PACKAGES.map((item) => (
