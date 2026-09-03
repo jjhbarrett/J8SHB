@@ -12,6 +12,7 @@ import {
   PACKAGES,
   packagePriceLabel,
   travelExcessLabel,
+  upcomingStudioDays,
   VENUES,
   type ShootPackage,
   type Venue,
@@ -38,8 +39,8 @@ function PricingPage() {
       <p className="text-sm font-medium text-muted">Pricing</p>
       <h1 className="mt-4 text-display text-fg">The shoot</h1>
       <p className="mt-4 max-w-xl text-body text-muted">
-        Room included. You don’t pay the studio on top. Studio days are exclusive
-        dates Josh sets. Request a date — this is not a payment.
+        Room included. You don’t pay the studio on top. Studio days are days
+        Josh is already in the room. Request a date — this is not a payment.
       </p>
 
       <ul className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-10">
@@ -150,7 +151,11 @@ function PackageCard({ item }: { item: ShootPackage }) {
         <p className="text-lg font-medium text-fg">{packagePriceLabel(item)}</p>
       </div>
       {item.exclusiveDates ? (
-        <p className="mt-3 text-sm font-medium text-fg">Exclusive dates only</p>
+        <p className="mt-3 text-sm font-medium text-fg">
+          {upcomingStudioDays().length
+            ? "Posted dates only — pick one on Book"
+            : "Dates posted as they’re set"}
+        </p>
       ) : null}
       {item.blurb ? (
         <p className="mt-3 max-w-md text-body text-muted">{item.blurb}</p>
@@ -164,7 +169,7 @@ function PackageCard({ item }: { item: ShootPackage }) {
       <Link
         to="/book"
         search={{ package: item.id }}
-        hash="book-studio"
+        hash={item.exclusiveDates ? "book-when" : "book-studio"}
         className={cn(btnPrimary, "mt-8")}
       >
         {item.id === "group" ? "Request a group shoot" : "Request this shoot"}
