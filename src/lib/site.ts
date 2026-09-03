@@ -90,6 +90,7 @@ export type StudioDay = {
  */
 export const STUDIO_DAYS: StudioDay[] = [
   { date: "2026-09-17", venueId: "northampton" },
+  { date: "2026-09-19", venueId: "london" },
 ];
 
 export function studioDayId(day: StudioDay): string {
