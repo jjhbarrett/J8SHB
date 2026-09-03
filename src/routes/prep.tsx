@@ -55,8 +55,9 @@ function PrepPage() {
         <h2 className="text-3xl font-light tracking-display text-fg">Bring</h2>
         <ul className="mt-6 space-y-4 text-body text-fg">
           <li>
-            Four or five outfits, even if we don’t use them all. Better to have
-            the option.
+            Bring a diverse wardrobe with different looks, based on the inspo
+            you’ve picked — even if we don’t use everything, the options are
+            there.
           </li>
           <li>Shoes that go with the looks.</li>
           <li>A bottle of water.</li>
