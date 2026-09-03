@@ -134,6 +134,8 @@ export type Venue = {
   recommended: boolean;
   image?: string;
   travelExcess?: number;
+  address: string;
+  mapsQuery: string;
 };
 
 export const VENUE_IMAGES: Record<string, string> = {
@@ -150,6 +152,9 @@ export const VENUES: Venue[] = [
     note: "The room people wait for.",
     recommended: true,
     image: VENUE_IMAGES.northampton,
+    address: "Building 14, Unit D2, Royal Ordnance Depot, Weedon Bec, NN7 4PS",
+    mapsQuery:
+      "Lite Studios, Building 14 Unit D2, Royal Ordnance Depot, Weedon Bec NN7 4PS",
   },
   {
     id: "london",
@@ -158,6 +163,8 @@ export const VENUES: Venue[] = [
     note: "Clean white studio.",
     recommended: false,
     image: VENUE_IMAGES.london,
+    address: "12 Cody Road, London E16 4SR",
+    mapsQuery: "Flash Studios, 12 Cody Road, London E16 4SR",
   },
   {
     id: "hampshire",
@@ -166,6 +173,8 @@ export const VENUES: Venue[] = [
     note: "Close, large, natural light.",
     recommended: false,
     image: VENUE_IMAGES.hampshire,
+    address: "Andover town centre, Hampshire",
+    mapsQuery: "The Andover Studio, Andover, Hampshire",
   },
 ];
 
@@ -190,6 +199,10 @@ export function venueById(
 
 export function studioById(id: string | undefined | null): Venue | undefined {
   return venueById(id);
+}
+
+export function venueMapsUrl(venue: Venue): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.mapsQuery)}`;
 }
 
 export function formatPrice(gbp: number): string {

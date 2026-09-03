@@ -29,6 +29,8 @@ function toVenue(row: VenueRow): Venue {
     recommended: Boolean(row.recommended),
     image: VENUE_IMAGES[row.id] ?? seed?.image,
     travelExcess: seed?.travelExcess,
+    address: seed?.address ?? row.name,
+    mapsQuery: seed?.mapsQuery ?? `${row.name}, ${row.city}`,
   };
 }
 
@@ -99,6 +101,8 @@ export const createVenue = createServerFn({ method: "POST" })
       name: data.name,
       note: data.note ?? "",
       recommended: Boolean(data.recommended),
+      address: data.name,
+      mapsQuery: `${data.name}, ${data.city}`,
     } satisfies Venue;
   });
 

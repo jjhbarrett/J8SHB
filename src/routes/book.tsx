@@ -297,7 +297,15 @@ function BookPage() {
           {done.note ? <Row label="Note" value={done.note} /> : null}
         </dl>
         <p className="mt-12 text-body text-muted">
-          Screenshot this page. Confirmation comes by email or Instagram.
+          Screenshot this page. Confirmation comes by email or Instagram. Once
+          the date is locked,{" "}
+          <Link
+            to="/prep"
+            className="underline decoration-line underline-offset-4 transition-opacity hover:opacity-70"
+          >
+            your shoot pack
+          </Link>{" "}
+          has prep, outfits and maps.
         </p>
       </main>
     );
