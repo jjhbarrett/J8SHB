@@ -22,12 +22,31 @@ function PrepPage() {
       <section className="mt-16">
         <h2 className="text-3xl font-light tracking-display text-fg">Prep</h2>
         <ul className="mt-6 space-y-4 text-body text-fg">
-          <li>A spray tan is a good idea if you can — it photographs well.</li>
+          <li>
+            If you’re getting a spray tan, book it for 48 hours before the
+            shoot. Don’t have one in the 24 hours before — it won’t have
+            settled.
+          </li>
           <li>Do hair and makeup before you get here, not in the room.</li>
           <li>Bring whatever you need for touch-ups through the shoot.</li>
           <li>
             Skip tight socks, waistbands and straps that morning so you don’t
             have marks on the skin.
+          </li>
+        </ul>
+      </section>
+
+      <section className="mt-16">
+        <h2 className="text-3xl font-light tracking-display text-fg">When you get here</h2>
+        <ul className="mt-6 space-y-4 text-body text-fg">
+          <li>
+            Arrive 10 minutes early so we’re ready to walk in on the slot. We
+            can’t go in early — there may be another shoot still in the room.
+            I’ll meet you at the door.
+          </li>
+          <li>
+            You’re welcome to bring someone. They can wait with you, but they
+            can’t come into the shoot unless you’ve booked them in.
           </li>
         </ul>
       </section>
