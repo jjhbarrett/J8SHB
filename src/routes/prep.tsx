@@ -1,7 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { btnPrimary } from "@/lib/chrome";
+import { createFileRoute } from "@tanstack/react-router";
 import { SITE, VENUES, venueMapsUrl } from "@/lib/site";
-import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/prep")({
   component: PrepPage,
@@ -16,7 +14,7 @@ function PrepPage() {
       <p className="text-sm font-medium text-muted">Your shoot</p>
       <h1 className="mt-4 text-display text-fg">Before you arrive</h1>
       <p className="mt-4 text-body text-muted">
-        A short pack for the day. Send this page to anyone you’ve booked in.
+        Here’s what to do before you get here, and how the day works.
       </p>
 
       <section className="mt-16">
@@ -101,14 +99,9 @@ function PrepPage() {
         </ul>
       </section>
 
-      <div className="mt-20 flex flex-col items-start gap-6 pb-8">
-        <p className="text-body text-muted">
-          Anything else, write or DM @{SITE.instagramHandle}.
-        </p>
-        <Link to="/book" className={cn(btnPrimary, "min-h-12 px-8")}>
-          Book a shoot
-        </Link>
-      </div>
+      <p className="mt-20 pb-8 text-body text-muted">
+        Anything else, write or DM @{SITE.instagramHandle}.
+      </p>
     </main>
   );
 }
