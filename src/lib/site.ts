@@ -57,7 +57,7 @@ export const PACKAGES: ShootPackage[] = [
     name: "Studio Days",
     blurb:
       "A private 1.5 hour slot on a day Josh is already in the studio.",
-    price: 250,
+    price: 225,
     hours: "1.5 hours",
     exclusiveDates: true,
     includes: [
