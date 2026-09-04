@@ -167,7 +167,7 @@ function GalleryPage() {
                 <button
                   type="button"
                   onClick={() => setOpen(photo.n)}
-                  className="block w-full"
+                  className="relative block w-full"
                   aria-label={`Open still ${photo.n}`}
                 >
                   <img
@@ -176,7 +176,9 @@ function GalleryPage() {
                     className="h-auto w-full rounded-lg bg-surface object-contain"
                     decoding="async"
                     draggable={false}
+                    onContextMenu={(event) => event.preventDefault()}
                   />
+                  <span aria-hidden className="absolute inset-0" />
                 </button>
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <p className="text-sm text-muted">
@@ -284,11 +286,16 @@ function Lightbox({
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg/95 fade-in"
     >
       <button type="button" onClick={onClose} className="absolute inset-0" aria-label="Close" />
-      <img
-        src={src}
-        alt={label}
-        className="relative z-10 max-h-[82svh] w-auto max-w-[min(100%,42rem)] object-contain p-4"
-      />
+      <div className="relative z-10 max-h-[82svh] max-w-[min(100%,42rem)] p-4">
+        <img
+          src={src}
+          alt={label}
+          className="max-h-[82svh] w-auto max-w-full object-contain"
+          draggable={false}
+          onContextMenu={(event) => event.preventDefault()}
+        />
+        <span aria-hidden className="absolute inset-4" />
+      </div>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-5">
         <p className="text-sm text-muted">{label}</p>
         <button

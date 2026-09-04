@@ -50,27 +50,37 @@ export function PhotoFrame({
       )}
     >
       {showImage ? (
-        <img
-          src={resolved}
-          alt={alt}
-          width={width}
-          height={height}
-          sizes={sizes}
-          className={cn(
-            cover
-              ? "h-full w-full object-cover"
-              : "h-auto w-full object-contain",
-            zoom &&
-              cover &&
-              "transition-transform duration-500 ease-out group-hover:scale-105",
-            imgClassName,
-          )}
-          loading={priority ? "eager" : "lazy"}
-          fetchPriority={priority ? "high" : "low"}
-          decoding="async"
-          draggable={false}
-          onError={() => setFailed(true)}
-        />
+        <>
+          <img
+            src={resolved}
+            alt={alt}
+            width={width}
+            height={height}
+            sizes={sizes}
+            className={cn(
+              cover
+                ? "h-full w-full object-cover"
+                : "h-auto w-full object-contain",
+              zoom &&
+                cover &&
+                "transition-transform duration-500 ease-out group-hover:scale-105",
+              imgClassName,
+            )}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "low"}
+            decoding="async"
+            draggable={false}
+            onContextMenu={(event) => event.preventDefault()}
+            onDragStart={(event) => event.preventDefault()}
+            onError={() => setFailed(true)}
+          />
+          <span
+            aria-hidden
+            className="absolute inset-0 z-10"
+            onContextMenu={(event) => event.preventDefault()}
+            onDragStart={(event) => event.preventDefault()}
+          />
+        </>
       ) : (
         <div className="flex h-full min-h-40 w-full items-center justify-center">
           <span className="text-sm text-muted">{label}</span>
