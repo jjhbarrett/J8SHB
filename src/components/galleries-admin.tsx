@@ -26,7 +26,7 @@ function queueUpload<T>(fn: () => Promise<T>): Promise<T> {
 function copyMessage(gallery: { id: string; pin: string; name: string }): string {
   const origin =
     typeof window !== "undefined" ? window.location.origin : "https://www.j8shb.com";
-  return `your proofs are up\n\n${origin}/g/${gallery.id}\ncode ${gallery.pin}\n\npick the ones you want — I’ll edit those`;
+  return `your proofs are up\n\n${origin}/g/${gallery.id}\ncode ${gallery.pin}\n\npick the ones you want. I’ll edit those`;
 }
 
 export function GalleriesAdmin() {

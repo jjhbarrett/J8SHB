@@ -2,7 +2,7 @@
 
 Editorial fitness photography. Winchester.
 
-Marketing site for physique, studio and confidence shoots. Request a studio — no instant booking, no payment on the site.
+Marketing site for physique, studio and confidence shoots. Request a studio. No instant booking, no payment on the site.
 
 ## Pages
 

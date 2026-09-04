@@ -16,7 +16,7 @@ export const Route = createFileRoute("/login")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in — J8 STUDIOS" },
+      { title: "Sign in · J8 STUDIOS" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

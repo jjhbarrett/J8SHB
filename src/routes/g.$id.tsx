@@ -13,7 +13,7 @@ export const Route = createFileRoute("/g/$id")({
   component: GalleryPage,
   head: () => ({
     meta: [
-      { title: `Proofs — ${SITE.name}` },
+      { title: `Proofs · ${SITE.name}` },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -152,7 +152,7 @@ function GalleryPage() {
       <p className="text-sm font-medium text-muted">Proofs</p>
       <h1 className="mt-4 text-display text-fg">{gallery.name}</h1>
       <p className="mt-4 max-w-lg text-body text-muted">
-        Full frames — nothing cropped. Tap Pick on the ones you want edited.
+        Full frames, nothing cropped. Tap Pick on the ones you want edited.
         Proofs first; finals follow in two to three weeks.
       </p>
 

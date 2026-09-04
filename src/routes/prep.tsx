@@ -4,7 +4,7 @@ import { SITE, VENUES, venueMapsUrl } from "@/lib/site";
 export const Route = createFileRoute("/prep")({
   component: PrepPage,
   head: () => ({
-    meta: [{ title: "Your shoot — J8 STUDIOS" }],
+    meta: [{ title: "Your shoot · J8 STUDIOS" }],
   }),
 });
 
@@ -22,7 +22,7 @@ function PrepPage() {
         <ul className="mt-6 space-y-4 text-body text-fg">
           <li>
             If you’re getting a spray tan, book it for 48 hours before the
-            shoot. Don’t have one in the 24 hours before — it won’t have
+            shoot. Don’t have one in the 24 hours before. It won’t have
             settled.
           </li>
           <li>Do hair and makeup before you get here, not in the room.</li>
@@ -39,7 +39,7 @@ function PrepPage() {
         <ul className="mt-6 space-y-4 text-body text-fg">
           <li>
             Arrive 10 minutes early so we’re ready to walk in on the slot. We
-            can’t go in early — there may be another shoot still in the room.
+            can’t go in early. There may be another shoot still in the room.
             I’ll meet you at the door.
           </li>
           <li>
@@ -54,7 +54,7 @@ function PrepPage() {
         <ul className="mt-6 space-y-4 text-body text-fg">
           <li>
             Bring a diverse wardrobe with different looks, based on the inspo
-            you’ve picked — even if we don’t use everything, the options are
+            you’ve picked. Even if we don’t use everything, the options are
             there.
           </li>
           <li>Shoes that go with the looks.</li>
@@ -62,7 +62,7 @@ function PrepPage() {
         </ul>
         <p className="mt-6 text-body text-muted">
           I’ll have olive oil spray for a bit of shine on the skin. You don’t
-          need to know how to pose — I’ll direct the whole time.
+          need to know how to pose. I’ll direct the whole time.
         </p>
       </section>
 

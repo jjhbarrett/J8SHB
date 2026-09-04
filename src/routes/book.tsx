@@ -65,7 +65,7 @@ export const Route = createFileRoute("/book")({
   }),
   component: BookPage,
   head: () => ({
-    meta: [{ title: "Book a shoot — J8 STUDIOS" }],
+    meta: [{ title: "Book a shoot · J8 STUDIOS" }],
   }),
 });
 
@@ -202,7 +202,7 @@ function BookPage() {
       date: slotDate ?? undefined,
     });
     const mail = {
-      subject: `J8 STUDIOS — ${shoot.name} request · ${referenceGuess}`,
+      subject: `J8 STUDIOS · ${shoot.name} request · ${referenceGuess}`,
       fields: {
         Reference: referenceGuess,
         Name: name.trim(),
@@ -210,7 +210,7 @@ function BookPage() {
         Shoot: `${shoot.name} · ${packagePriceLabel(shoot)}`,
         Studio: `${studio.name}, ${studio.city}`,
         When: when,
-        Note: note.trim() || "—",
+        Note: note.trim() || "-",
       },
     };
     const payload = {
@@ -355,7 +355,7 @@ function BookPage() {
             {exclusive ? (
               <div className="mt-8 max-w-xl">
                 <p className="text-body text-muted">
-                  Days Josh is already in the room. Pick one — the studio is on
+                  Days Josh is already in the room. Pick one. The studio is on
                   the date.
                 </p>
                 {studioDays.length === 0 ? (

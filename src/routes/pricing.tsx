@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/pricing")({
   component: PricingPage,
   head: () => ({
-    meta: [{ title: "Pricing — J8 STUDIOS" }],
+    meta: [{ title: "Pricing · J8 STUDIOS" }],
   }),
 });
 
@@ -40,7 +40,7 @@ function PricingPage() {
       <h1 className="mt-4 text-display text-fg">The shoot</h1>
       <p className="mt-4 max-w-xl text-body text-muted">
         Room included. You don’t pay the studio on top. Studio days are days
-        Josh is already in the room. Request a date — this is not a payment.
+        Josh is already in the room. Request a date. This is not a payment.
       </p>
       <p className="mt-4 max-w-xl text-body text-fg">
         Payments can be split in two.
@@ -160,7 +160,7 @@ function PackageCard({ item }: { item: ShootPackage }) {
       {item.exclusiveDates ? (
         <p className="mt-3 text-sm font-medium text-fg">
           {upcomingStudioDays().length
-            ? "Posted dates only — pick one on Book"
+            ? "Posted dates only. Pick one on Book"
             : "Dates posted as they’re set"}
         </p>
       ) : null}

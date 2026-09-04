@@ -94,7 +94,7 @@ export const submitShootRequest = createServerFn({ method: "POST" })
         month: data.month,
         date: data.date,
       }),
-      Note: data.note?.trim() ? data.note.trim() : "—",
+      Note: data.note?.trim() ? data.note.trim() : "-",
     };
     const subject = `${shoot?.name ?? "Shoot"} request · ${reference}`;
     const { recordEnquiry } = await import("@/lib/enquiries");
@@ -110,7 +110,7 @@ export const submitShootRequest = createServerFn({ method: "POST" })
     });
     await sendEnquiryMail({
       id: reference,
-      subject: `J8 STUDIOS — ${subject}`,
+      subject: `J8 STUDIOS · ${subject}`,
       fields,
     });
     return { ok: true as const, reference };
@@ -144,7 +144,7 @@ export const submitContact = createServerFn({ method: "POST" })
     });
     await sendEnquiryMail({
       id,
-      subject: `J8 STUDIOS — ${subject}`,
+      subject: `J8 STUDIOS · ${subject}`,
       replyTo: data.email?.includes("@") ? data.email : undefined,
       fields,
     });

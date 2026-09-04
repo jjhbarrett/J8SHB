@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
   head: () => ({
-    meta: [{ title: "Contact — J8 STUDIOS" }],
+    meta: [{ title: "Contact · J8 STUDIOS" }],
   }),
 });
 
@@ -59,7 +59,7 @@ function ContactPage() {
           .then(() => true)
           .catch(() => false),
         sendStudioMail({
-          subject: `J8 STUDIOS — Message from ${name.trim()}`,
+          subject: `J8 STUDIOS · Message from ${name.trim()}`,
           replyTo: email.includes("@") ? email.trim() : undefined,
           fields,
         })
@@ -81,7 +81,7 @@ function ContactPage() {
       <p className="text-sm font-medium text-muted">Contact</p>
       <h1 className="mt-4 text-display text-fg">Write</h1>
       <p className="mt-4 max-w-lg text-body text-muted">
-        For a shoot, use Book. For anything else, write here — or just DM.
+        For a shoot, use Book. For anything else, write here, or just DM.
       </p>
 
       <div className="mt-10 flex flex-col gap-3 text-body text-fg">

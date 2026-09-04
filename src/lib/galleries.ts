@@ -221,7 +221,7 @@ export const submitGalleryPicks = createServerFn({ method: "POST" })
     const subject = `Picks from ${row.name} · ${picks.length} of ${photos.length}`;
     const fields = {
       Gallery: row.name,
-      Instagram: row.instagram ? `@${row.instagram}` : "—",
+      Instagram: row.instagram ? `@${row.instagram}` : "-",
       Picks: labels,
       Link: `/g/${row.id}`,
     };
@@ -236,7 +236,7 @@ export const submitGalleryPicks = createServerFn({ method: "POST" })
     });
     await sendEnquiryMail({
       id: `P-${row.id}`,
-      subject: `J8 STUDIOS — ${subject}`,
+      subject: `J8 STUDIOS · ${subject}`,
       fields,
     });
     return { ok: true as const, picks };

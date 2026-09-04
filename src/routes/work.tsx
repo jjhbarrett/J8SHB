@@ -14,7 +14,7 @@ export const Route = createFileRoute("/work")({
   }),
   component: WorkPage,
   head: () => ({
-    meta: [{ title: "Work — J8 STUDIOS" }],
+    meta: [{ title: "Work · J8 STUDIOS" }],
   }),
 });
 
