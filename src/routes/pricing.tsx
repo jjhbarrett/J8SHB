@@ -95,9 +95,8 @@ function VenueCard({ venue }: { venue: Venue }) {
         label="STUDIO"
         className="aspect-studio"
         width={1000}
-        height={750}
+        height={1250}
         sizes="(min-width: 768px) 33vw, 100vw"
-        fit="contain"
         zoom={false}
       />
       <div className="mt-5 flex items-baseline justify-between gap-4">
@@ -125,10 +124,9 @@ function VenueCard({ venue }: { venue: Venue }) {
                 label="STUDIO"
                 className="aspect-studio"
                 width={600}
-                height={450}
+                height={750}
                 sizes="30vw"
                 zoom={false}
-                fit="contain"
               />
             </li>
           ))}
@@ -147,9 +145,8 @@ function PackageCard({ item }: { item: ShootPackage }) {
         label="SHOOT"
         className="aspect-studio"
         width={1400}
-        height={1050}
+        height={1750}
         sizes="(min-width: 1024px) 50vw, 100vw"
-        fit="contain"
       />
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-3">
         <h2 className="text-2xl font-light tracking-display text-fg sm:text-3xl">

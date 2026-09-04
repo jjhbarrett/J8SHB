@@ -33,9 +33,8 @@ export function StudioCards({
                 selected && "ring-2 ring-fg ring-offset-4 ring-offset-bg",
               )}
               width={1000}
-              height={750}
+              height={1250}
               sizes="(min-width: 768px) 33vw, 100vw"
-              fit="contain"
               zoom={false}
             />
             <div className="mt-5 flex items-baseline justify-between gap-4">

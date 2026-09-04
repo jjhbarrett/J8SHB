@@ -23,13 +23,11 @@ export function PortfolioGrid({
             mediaKey={workMediaKey(still.id)}
             alt={still.alt}
             label="PORTFOLIO"
-            className="w-full rounded-lg"
-            imgClassName="h-auto w-full"
+            className="aspect-still w-full rounded-lg"
             width={1200}
-            height={1800}
+            height={1500}
             sizes="(min-width: 768px) 33vw, 100vw"
             priority={index < 2}
-            fit="contain"
             zoom={false}
           />
         );

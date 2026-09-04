@@ -546,9 +546,8 @@ function PackageChoice({
           selected && "ring-2 ring-fg ring-offset-4 ring-offset-bg",
         )}
         width={1200}
-        height={900}
+        height={1500}
         sizes="(min-width: 640px) 50vw, 100vw"
-        fit="contain"
       />
       <div className="mt-4 flex items-baseline justify-between gap-3">
         <h3 className="text-xl font-normal tracking-display text-fg">{item.name}</h3>

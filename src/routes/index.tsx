@@ -17,25 +17,23 @@ function Home() {
 
   return (
     <main>
-      <section className="px-4 pt-2 sm:px-6">
-        <div className="relative mx-auto aspect-[3/4] max-w-7xl overflow-hidden rounded-xl sm:aspect-auto sm:min-h-[78svh]">
+      <section className="mx-auto max-w-7xl px-4 pt-2 sm:px-6">
+        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
           <PhotoFrame
             mediaKey="hero"
             alt="Editorial physique photograph, studio"
             label="PORTFOLIO"
-            className="absolute inset-0 h-full w-full rounded-xl"
-            imgClassName="h-full w-full object-cover object-[center_18%]"
-            width={1600}
-            height={2000}
-            sizes="100vw"
+            className="aspect-still w-full rounded-xl"
+            imgClassName="h-full w-full object-cover object-center"
+            width={1200}
+            height={1500}
+            sizes="(min-width: 1024px) 50vw, 100vw"
             priority
             zoom={false}
           />
-          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-bg/85 to-transparent">
-            <p className="mx-auto max-w-7xl px-6 py-8 text-lg font-light tracking-display text-fg sm:px-10 sm:py-10 sm:text-2xl">
-              {SITE.positioning}
-            </p>
-          </div>
+          <p className="max-w-md text-lg font-light tracking-display text-fg sm:text-2xl lg:text-3xl">
+            {SITE.positioning}
+          </p>
         </div>
       </section>
 
