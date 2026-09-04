@@ -27,7 +27,7 @@ export type StaticMediaKey = (typeof MEDIA_KEYS)[number];
 export type MediaKey = string;
 
 const MEDIA_KEY_PATTERN =
-  /^(hero|work-\d{2}|studio-[a-z0-9]+(?:-[a-z0-9]+)*|package-[a-z0-9-]+)$/;
+  /^(hero|work-\d{2}|studio-[a-z0-9]+(?:-[a-z0-9]+)*|package-[a-z0-9-]+|g-[a-z0-9]{6,12}-\d{2,3})$/;
 
 export type MediaSlot = {
   key: MediaKey;
@@ -58,6 +58,14 @@ export const MEDIA_SLOTS: MediaSlot[] = [
   { key: "work-11", label: "Work 11", group: "Work", maxWidth: 800 },
   { key: "work-12", label: "Work 12", group: "Work", maxWidth: 800 },
 ];
+
+export function isGalleryMediaKey(value: string): boolean {
+  return /^g-[a-z0-9]{6,12}-\d{2,3}$/.test(value);
+}
+
+export function galleryMediaKey(galleryId: string, n: number): MediaKey {
+  return `g-${galleryId}-${String(n).padStart(2, "0")}`;
+}
 
 export function isMediaKey(value: string): boolean {
   return value.length >= 4 && value.length <= 64 && MEDIA_KEY_PATTERN.test(value);

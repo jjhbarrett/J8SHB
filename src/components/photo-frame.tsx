@@ -14,6 +14,7 @@ type PhotoFrameProps = {
   height?: number;
   sizes?: string;
   zoom?: boolean;
+  fit?: "cover" | "contain";
 };
 
 export function PhotoFrame({
@@ -28,6 +29,7 @@ export function PhotoFrame({
   height,
   sizes,
   zoom = true,
+  fit = "cover",
 }: PhotoFrameProps) {
   const { srcFor } = useMedia();
   const resolved = mediaKey ? srcFor(mediaKey) : src;
@@ -38,6 +40,7 @@ export function PhotoFrame({
   }, [resolved]);
 
   const showImage = Boolean(resolved) && !failed;
+  const cover = fit === "cover";
 
   return (
     <div
@@ -54,8 +57,11 @@ export function PhotoFrame({
           height={height}
           sizes={sizes}
           className={cn(
-            "h-full w-full object-cover",
+            cover
+              ? "h-full w-full object-cover"
+              : "h-auto w-full object-contain",
             zoom &&
+              cover &&
               "transition-transform duration-500 ease-out group-hover:scale-105",
             imgClassName,
           )}

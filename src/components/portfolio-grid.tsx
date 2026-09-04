@@ -15,7 +15,7 @@ export function PortfolioGrid({
   linkToWork = false,
 }: PortfolioGridProps) {
   return (
-    <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5">
+    <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 md:gap-5">
       {stills.map((still, index) => {
         const frame = (
           <PhotoFrame
@@ -23,11 +23,14 @@ export function PortfolioGrid({
             mediaKey={workMediaKey(still.id)}
             alt={still.alt}
             label="PORTFOLIO"
-            className="aspect-still rounded-lg"
-            width={800}
-            height={1200}
-            sizes="(min-width: 768px) 33vw, 50vw"
+            className="w-full rounded-lg"
+            imgClassName="h-auto w-full"
+            width={1200}
+            height={1800}
+            sizes="(min-width: 768px) 33vw, 100vw"
             priority={index < 2}
+            fit="contain"
+            zoom={false}
           />
         );
 

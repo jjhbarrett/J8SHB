@@ -35,6 +35,8 @@ export function StudioCards({
               width={1000}
               height={750}
               sizes="(min-width: 768px) 33vw, 100vw"
+              fit="contain"
+              zoom={false}
             />
             <div className="mt-5 flex items-baseline justify-between gap-4">
               <p className="text-sm text-muted">{studio.city}</p>

@@ -18,15 +18,15 @@ function Home() {
   return (
     <main>
       <section className="px-4 pt-2 sm:px-6">
-        <div className="relative mx-auto min-h-[78svh] max-w-7xl overflow-hidden rounded-xl">
+        <div className="relative mx-auto aspect-[3/4] max-w-7xl overflow-hidden rounded-xl sm:aspect-auto sm:min-h-[78svh]">
           <PhotoFrame
             mediaKey="hero"
             alt="Editorial physique photograph, studio"
             label="PORTFOLIO"
             className="absolute inset-0 h-full w-full rounded-xl"
-            imgClassName="h-full w-full object-cover"
+            imgClassName="h-full w-full object-cover object-[center_18%]"
             width={1600}
-            height={900}
+            height={2000}
             sizes="100vw"
             priority
             zoom={false}

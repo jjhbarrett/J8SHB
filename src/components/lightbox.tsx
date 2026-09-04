@@ -65,13 +65,14 @@ export function Lightbox({ stills, activeId, onClose, onChange }: LightboxProps)
           mediaKey={workMediaKey(still.id)}
           alt={still.alt}
           label="PORTFOLIO"
-          className="max-h-full max-w-full rounded-lg"
-          imgClassName="max-h-[82svh] w-auto rounded-lg object-contain"
-          width={800}
-          height={1200}
-          sizes="90vw"
+          className="max-h-full max-w-full bg-transparent"
+          imgClassName="max-h-[82svh] w-auto max-w-full rounded-lg object-contain"
+          width={1600}
+          height={2400}
+          sizes="100vw"
           priority
           zoom={false}
+          fit="contain"
         />
       </div>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-5">

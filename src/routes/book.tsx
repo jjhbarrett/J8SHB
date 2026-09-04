@@ -548,6 +548,7 @@ function PackageChoice({
         width={1200}
         height={900}
         sizes="(min-width: 640px) 50vw, 100vw"
+        fit="contain"
       />
       <div className="mt-4 flex items-baseline justify-between gap-3">
         <h3 className="text-xl font-normal tracking-display text-fg">{item.name}</h3>
