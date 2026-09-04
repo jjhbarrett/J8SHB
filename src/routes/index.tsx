@@ -20,7 +20,7 @@ function Home() {
   return (
     <main>
       <section className="mx-auto max-w-7xl px-4 pt-2 sm:px-6">
-        <div className="grid items-start gap-8 lg:grid-cols-2 lg:items-stretch lg:gap-16">
+        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
           <PhotoFrame
             mediaKey="hero"
             alt="Editorial physique photograph, studio"
@@ -33,7 +33,7 @@ function Home() {
             priority
             zoom={false}
           />
-          <div className="flex flex-col justify-between gap-8 py-1 lg:py-4">
+          <div className="flex flex-col gap-6">
             <p className="text-2xl font-light tracking-display text-fg sm:text-3xl lg:text-4xl lg:leading-snug">
               {SITE.positioning}
             </p>
