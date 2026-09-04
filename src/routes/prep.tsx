@@ -71,7 +71,7 @@ function PrepPage() {
       <section className="mt-16">
         <h2 className="text-3xl font-light tracking-display text-fg">After</h2>
         <ul className="mt-6 space-y-4 text-body text-fg">
-          <li>Proofs within 48 hours of the shoot.</li>
+          <li>Proofs within 48 hours, on a private gallery link.</li>
           <li>You pick your favourites.</li>
           <li>Final edits take up to two to three weeks.</li>
         </ul>

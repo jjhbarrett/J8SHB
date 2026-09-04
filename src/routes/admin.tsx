@@ -6,6 +6,7 @@ import { ADMIN_X_HANDLE } from "@/lib/admin-allowlist";
 import { btnPrimary, btnQuiet, fieldClass } from "@/lib/chrome";
 import { compressImage, formatBytes } from "@/lib/compress-image";
 import { listEnquiries, type EnquiryRow } from "@/lib/enquiries";
+import { GalleriesAdmin } from "@/components/galleries-admin";
 import { useMedia } from "@/lib/media-context";
 import { clearMedia, saveMedia } from "@/lib/media";
 import {
@@ -71,8 +72,8 @@ function AdminPage() {
           <p className="text-sm font-medium text-muted">Admin</p>
           <h1 className="mt-4 text-display text-fg">Studio</h1>
           <p className="mt-4 max-w-xl text-body text-muted">
-            Requests land here, and a note is emailed to you. Photos below
-            replace the frames on the site.
+            Requests land here, and a note is emailed to you. Galleries are
+            private proofing. Photos below replace the frames on the site.
           </p>
         </div>
         <button
@@ -89,6 +90,8 @@ function AdminPage() {
           {signingOut ? "Signing out" : `@${ADMIN_X_HANDLE} · Sign out`}
         </button>
       </div>
+
+      <GalleriesAdmin />
 
       <RequestsPanel />
 
