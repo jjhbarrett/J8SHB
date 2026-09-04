@@ -34,7 +34,7 @@ export const PACKAGES: ShootPackage[] = [
     id: "signature",
     name: "1–1 Private",
     blurb: "Your date. The room is yours.",
-    price: 350,
+    price: 299,
     hours: "2 hours",
     includes: [
       "15 edited images, chosen by you",
