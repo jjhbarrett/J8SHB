@@ -34,7 +34,6 @@ function Home() {
             zoom={false}
           />
           <div className="flex flex-col justify-between gap-8 py-1 lg:py-4">
-            <p className="text-sm font-medium text-muted">{SITE.city}</p>
             <p className="text-2xl font-light tracking-display text-fg sm:text-3xl lg:text-4xl lg:leading-snug">
               {SITE.positioning}
             </p>

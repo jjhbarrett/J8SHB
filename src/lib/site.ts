@@ -1,7 +1,7 @@
 export const SITE = {
   name: "J8 STUDIOS",
-  city: "Winchester",
-  line: "Editorial fitness photography. Winchester.",
+  city: "",
+  line: "Editorial fitness photography.",
   positioning: "Editorial fitness photography. Studio, physique, confidence.",
   email: "j8shb@icloud.com",
   instagramHandle: "j8shb",

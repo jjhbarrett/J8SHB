@@ -1,6 +1,6 @@
 # J8 STUDIOS
 
-Editorial fitness photography. Winchester.
+Editorial fitness photography.
 
 Marketing site for physique, studio and confidence shoots. Request a studio. No instant booking, no payment on the site.
 
