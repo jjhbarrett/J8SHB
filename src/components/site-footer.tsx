@@ -18,6 +18,9 @@ export function SiteFooter() {
           <Link to="/prep" className="transition-opacity duration-200 hover:text-fg">
             Your shoot
           </Link>
+          <Link to="/form" className="transition-opacity duration-200 hover:text-fg">
+            Shoot form
+          </Link>
           <Link to="/pricing" className="transition-opacity duration-200 hover:text-fg">
             Pricing
           </Link>

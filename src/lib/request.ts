@@ -150,3 +150,83 @@ export const submitContact = createServerFn({ method: "POST" })
     });
     return { ok: true as const };
   });
+
+const shootDetailsSchema = z
+  .object({
+    name: z.string().trim().min(1).max(80),
+    instagram: z.string().trim().max(80).optional(),
+    phone: z.string().trim().min(7).max(40),
+    age: z.number().int().min(16).max(99),
+    shootDate: z.string().trim().max(80).optional(),
+    oil: z.enum(["yes", "no", "sensitivity"]),
+    skin: z.string().trim().max(400).optional(),
+    emergencyName: z.string().trim().min(1).max(80),
+    emergencyPhone: z.string().trim().min(7).max(40),
+    emergencyRelation: z.string().trim().max(80).optional(),
+    injuries: z.string().trim().max(400).optional(),
+    skipLooks: z.string().trim().max(400).optional(),
+    guest: z.enum(["yes", "no"]),
+    note: z.string().trim().max(400).optional(),
+    company: z.string().max(80).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.oil === "sensitivity" && !data.skin?.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Tell me what the skin sensitivity is.",
+        path: ["skin"],
+      });
+    }
+  });
+
+export const submitShootDetails = createServerFn({ method: "POST" })
+  .validator(shootDetailsSchema)
+  .handler(async ({ data }) => {
+    if (data.company?.trim()) {
+      return { ok: true as const };
+    }
+    const handle = data.instagram?.replace(/^@/, "") || undefined;
+    const oilLabel =
+      data.oil === "yes"
+        ? "Fine to use"
+        : data.oil === "no"
+          ? "Skip it"
+          : "Has a sensitivity";
+    const fields: Record<string, string> = {
+      Name: data.name,
+      Phone: data.phone,
+      Age: String(data.age),
+      "Olive oil": oilLabel,
+      "Emergency name": data.emergencyName,
+      "Emergency phone": data.emergencyPhone,
+      Guest: data.guest === "yes" ? "Yes" : "No",
+    };
+    if (handle) fields.Instagram = `@${handle}`;
+    if (data.shootDate?.trim()) fields.Date = data.shootDate.trim();
+    if (data.skin?.trim()) fields.Skin = data.skin.trim();
+    if (data.emergencyRelation?.trim()) {
+      fields["Emergency relation"] = data.emergencyRelation.trim();
+    }
+    if (data.injuries?.trim()) fields.Injuries = data.injuries.trim();
+    if (data.skipLooks?.trim()) fields["Looks to skip"] = data.skipLooks.trim();
+    if (data.note?.trim()) fields.Note = data.note.trim();
+    const subject = `Shoot form · ${data.name}`;
+    const { recordEnquiry } = await import("@/lib/enquiries");
+    const { sendEnquiryMail } = await import("@/lib/notify.server");
+    const id = `F-${makeReference().slice(3)}`;
+    await recordEnquiry({
+      id,
+      kind: "details",
+      reference: id,
+      name: data.name,
+      instagram: handle,
+      subject,
+      body: asText(fields),
+    });
+    await sendEnquiryMail({
+      id,
+      subject: `J8 STUDIOS · ${subject}`,
+      fields,
+    });
+    return { ok: true as const };
+  });

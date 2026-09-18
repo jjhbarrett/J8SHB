@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SITE, VENUES, venueMapsUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/prep")({
@@ -100,7 +100,14 @@ function PrepPage() {
       </section>
 
       <p className="mt-20 pb-8 text-body text-muted">
-        Anything else, write or DM @{SITE.instagramHandle}.
+        Once the date is locked, fill in{" "}
+        <Link
+          to="/form"
+          className="text-fg underline decoration-line underline-offset-4"
+        >
+          the shoot form
+        </Link>
+        . Anything else, write or DM @{SITE.instagramHandle}.
       </p>
     </main>
   );
