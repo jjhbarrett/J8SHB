@@ -299,7 +299,7 @@ function FormPage() {
 
           <fieldset>
             <legend className="text-sm text-muted">
-              Bringing someone? They wait outside the shoot unless they’re booked in.
+              Are you bringing someone? They can be in the room. They don’t get shots unless they’re booked in.
             </legend>
             <div className="mt-3 flex flex-col gap-2">
               <Choice

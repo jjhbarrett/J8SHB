@@ -43,8 +43,8 @@ function PrepPage() {
             I’ll meet you at the door.
           </li>
           <li>
-            You’re welcome to bring someone. They can wait with you, but they
-            can’t come into the shoot unless you’ve booked them in.
+            You’re welcome to bring someone. They can be in the room. They
+            don’t get shots unless they’re booked in.
           </li>
         </ul>
       </section>
