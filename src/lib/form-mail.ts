@@ -35,7 +35,8 @@ function accepted(status: number, raw: string): boolean {
 
 export async function sendStudioMail(mail: EnquiryMail): Promise<void> {
   const to = noticeInbox();
-  const from = mail.replyTo || "j8shb@icloud.com";
+  const from =
+    mail.replyTo?.includes("@") ? mail.replyTo : mail.fields.Email || "j8shb@icloud.com";
   const message = enquiryText(mail.fields);
   const payload: Record<string, string> = {
     _subject: mail.subject,
@@ -45,7 +46,6 @@ export async function sendStudioMail(mail: EnquiryMail): Promise<void> {
     name: mail.fields.Name || SITE.name,
     email: from,
     message,
-    ...mail.fields,
   };
   const ajax = await fetch(`https://formsubmit.co/ajax/${to}`, {
     method: "POST",

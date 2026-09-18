@@ -22,6 +22,7 @@ type YesNo = "yes" | "no";
 function FormPage() {
   const [name, setName] = useState("");
   const [instagram, setInstagram] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
   const [shootDate, setShootDate] = useState("");
@@ -46,6 +47,10 @@ function FormPage() {
     const ageN = Number(age);
     if (!name.trim()) {
       setError("Name is required.");
+      return;
+    }
+    if (!email.includes("@")) {
+      setError("Email is required.");
       return;
     }
     if (phone.trim().length < 7) {
@@ -76,6 +81,7 @@ function FormPage() {
     setPending(true);
     const fields: Record<string, string> = {
       Name: name.trim(),
+      Email: email.trim(),
       Phone: phone.trim(),
       Age: String(ageN),
       "Olive oil":
@@ -98,6 +104,7 @@ function FormPage() {
           data: {
             name: name.trim(),
             instagram: instagram.trim() || undefined,
+            email: email.trim(),
             phone: phone.trim(),
             age: ageN,
             shootDate: shootDate.trim() || undefined,
@@ -117,6 +124,7 @@ function FormPage() {
           .catch(() => false),
         sendStudioMail({
           subject: `J8 STUDIOS · Shoot form · ${name.trim()}`,
+          replyTo: email.trim(),
           fields,
         })
           .then(() => true)
@@ -172,6 +180,17 @@ function FormPage() {
               className={fieldClass}
               placeholder="@handle"
               autoComplete="username"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm text-muted">Email</span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={fieldClass}
+              autoComplete="email"
+              required
             />
           </label>
           <label className="block">

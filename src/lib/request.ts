@@ -155,6 +155,7 @@ const shootDetailsSchema = z
   .object({
     name: z.string().trim().min(1).max(80),
     instagram: z.string().trim().max(80).optional(),
+    email: z.string().trim().email().max(120),
     phone: z.string().trim().min(7).max(40),
     age: z.number().int().min(16).max(99),
     shootDate: z.string().trim().max(80).optional(),
@@ -194,6 +195,7 @@ export const submitShootDetails = createServerFn({ method: "POST" })
           : "Has a sensitivity";
     const fields: Record<string, string> = {
       Name: data.name,
+      Email: data.email,
       Phone: data.phone,
       Age: String(data.age),
       "Olive oil": oilLabel,
@@ -219,6 +221,7 @@ export const submitShootDetails = createServerFn({ method: "POST" })
       kind: "details",
       reference: id,
       name: data.name,
+      email: data.email,
       instagram: handle,
       subject,
       body: asText(fields),
@@ -226,6 +229,7 @@ export const submitShootDetails = createServerFn({ method: "POST" })
     await sendEnquiryMail({
       id,
       subject: `J8 STUDIOS · ${subject}`,
+      replyTo: data.email,
       fields,
     });
     return { ok: true as const };

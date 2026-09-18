@@ -78,7 +78,7 @@ async function sendWebhook(mail: EnquiryMail, to: string, text: string): Promise
 }
 
 async function sendFormSubmit(mail: EnquiryMail, to: string, text: string): Promise<boolean> {
-  const from = mail.replyTo || "j8shb@icloud.com";
+  const from = mail.replyTo || mail.fields.Email || "j8shb@icloud.com";
   const payload = {
     _subject: mail.subject,
     _template: "table",
@@ -87,7 +87,6 @@ async function sendFormSubmit(mail: EnquiryMail, to: string, text: string): Prom
     name: mail.fields.Name || SITE.name,
     email: from,
     message: text,
-    ...mail.fields,
   };
   const url = `https://formsubmit.co/ajax/${to}`;
   for (let attempt = 0; attempt < 3; attempt++) {
